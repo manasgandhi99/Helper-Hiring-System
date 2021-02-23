@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "816042727514",
+    "project_id": "helper-hiring-backend",
+    "storage_bucket": "helper-hiring-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816042727514:android:6140117311780b87e9e063",
+        "android_client_info": {
+          "package_name": "com.example.Helper_Hiring_System"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816042727514-76673ej49vp8rrq1u1k2co22indeg7u7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.Helper_Hiring_System",
+            "certificate_hash": "ea1bebe4df90e2a186e56b020333f775ccd01bb0"
+          }
+        },
+        {
+          "client_id": "816042727514-tjh3fp7mga9mfbsi307fi8ablrif71vv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuQ_68L4qJFER1HYt7AHZ2uoN8HZOUjUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816042727514-tjh3fp7mga9mfbsi307fi8ablrif71vv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
