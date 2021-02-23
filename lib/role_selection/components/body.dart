@@ -10,6 +10,10 @@ import 'package:Helper_Hiring_System/helper_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 
 class Body extends StatefulWidget {
@@ -21,13 +25,15 @@ class Body extends StatefulWidget {
   final String state;
   final String city;
   final String password;
-  Body({this.name, this.email, this.contactno, this.state, this.city, this.password});
+  final File file;
+  Body({this.name, this.email, this.contactno, this.state, this.city, this.password, this.file});
 
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
+  String fileurl;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +89,7 @@ class _BodyState extends State<Body> {
                         onPressed: ()async{
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         prefs.setBool("pref"+ widget.email, true);
+                        fileurl = await uploadFiles(widget.file);
                         print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
                         store();
                         Navigator.pop(context);
@@ -107,8 +114,9 @@ class _BodyState extends State<Body> {
                         onPressed: ()async{
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         prefs.setBool("pref"+widget.email, false);
+                        fileurl = await uploadFiles(widget.file);
                         print("Helper Store Function Call!!!!!!!!!!!!!!!!!");
-                        helper_store();
+                        helperstore();
                         Navigator.pop(context);
                         Navigator.push(context , MaterialPageRoute(builder: (context) => HelperHome()));
                         },
@@ -137,7 +145,7 @@ class _BodyState extends State<Body> {
         .collection('employer')
         .doc(widget.email)
         .set(
-        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city});
+        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
     }
     catch(e){
       print("Error: " + e);
@@ -145,18 +153,31 @@ class _BodyState extends State<Body> {
     
   }
 
-  Future<void> helper_store() async {
+  Future<void> helperstore() async {
     try{
       await FirebaseFirestore.instance
         .collection('helper')
         .doc(widget.email)
         .set(
-        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city});
+        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
     }
     catch(e){
       print("Error: " + e);
     }
     
+  }
+
+  Future<String> uploadFiles(File _image) async {
+    String imageUrl;
+    print("Upload docs wala user\n");
+    print(widget.email);
+    String imageRef = widget.email + '/' + _image.path.split('/').last;
+    print(imageRef);
+    // await FirebaseStorage.instance.ref(imageRef).putFile(_image);
+
+    imageUrl = await (await FirebaseStorage.instance.ref(imageRef).putFile(_image)).ref.getDownloadURL();
+    print(imageUrl);
+    return imageUrl;
   }
   
 }

@@ -18,7 +18,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'dart:math';
-// import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 // import 'dart:convert';
 
@@ -53,7 +53,7 @@ class _Bodystate extends State<Body> {
   int enteredotp = 0;
   int randomNumber;
   String outputshoutput='';
-  // List<File> files;
+  File file;
 
   @override
   void dispose() {
@@ -304,9 +304,9 @@ class _Bodystate extends State<Body> {
                     onPressed: () async{
                       String useruid = await validateAndSubmit(context);
                       print("apna Userid: "+ useruid);
-                      if(useruid != "Error while Registering User!!" && useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!"){
+                      if(useruid != "Error while Registering User!!" && useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Upload Aadhar field empty!!"){
                         Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => RoleSelection(name: _name, email: _email, contactno: _contactno,state:  _state, city: _cityarea,password: _password)));
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => RoleSelection(name: _name, email: _email, contactno: _contactno,state:  _state, city: _cityarea,password: _password, file:file)));
                     }
                     else{
                       print('OTP verification failed!!');
@@ -346,13 +346,11 @@ class _Bodystate extends State<Body> {
   }
 
   _upload() async{
-      FilePickerResult result = await FilePicker.platform.pickFiles(allowMultiple: true);
+      FilePickerResult result = await FilePicker.platform.pickFiles();
       setState(() {
         if(result != null) {
-          List<File> files = result.paths.map((path) => File(path)).toList();
-          for(int i=0;i<files.length;i++){
-            print(files[i].path);
-          }
+          file = File(result.files.single.path);
+          print("File path from upload func: "+file.path);
         } else {
           // User canceled the picker
         }
@@ -426,10 +424,10 @@ class _Bodystate extends State<Body> {
     );
   }
 
-  showErrorDialog(BuildContext context) {
+  showErrorDialog(BuildContext context,String title, String content) {
     // set up the button
     Widget okButton = FlatButton(
-      child: Text("OK"),
+      child: Text("OK", style: TextStyle(color: kPrimaryColor),),
       onPressed: () {
         Navigator.pop(context,null);
       },
@@ -437,8 +435,8 @@ class _Bodystate extends State<Body> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("OTP Error"),
-      content: Text("Please Enter Valid OTP"),
+      title: Text(title),
+      content: Text(content),
       actions: [
         okButton,
       ],
@@ -455,27 +453,36 @@ class _Bodystate extends State<Body> {
 
   Future<String> validateAndSubmit(BuildContext context) async{
     if(validateAndSave()){
-      Random random = new Random();
-      randomNumber = random.nextInt(maxNumber)+minNumber;
-      otp.sendOtp(_contactno, "Your OTP is: "+ randomNumber.toString(), minNumber, maxNumber, countryCode);
-      print("OTP Sent");
-      String outputshoutput = await _showMyDialog(context);
-      print("Outputshoutput: "+ outputshoutput);
-      if(outputshoutput == "Success"){
-
-        try{
-          User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)).user;
-          print("Registered user => " + user.uid);
-          return user.uid;
-        }
-        catch(e){
-          print("Error => $e");
-          return "Error while Registering User!!";
-        }
+      // print("File ka value is: "+file.path);
+      // bool filepath = await file.exists();
+      // print("File ka string value is: "+ (filepath.toString()));
+      if(file == null){
+        showErrorDialog(context, "Upload Error", "Please Upload Aadhar Card");
+        return "Upload Aadhar field empty!!";
       }
       else{
-        showErrorDialog(context);
-        return "OTP Verification failed!!";
+        Random random = new Random();
+        randomNumber = random.nextInt(maxNumber)+minNumber;
+        otp.sendOtp(_contactno, "Your OTP is: "+ randomNumber.toString(), minNumber, maxNumber, countryCode);
+        print("OTP Sent");
+        String outputshoutput = await _showMyDialog(context);
+        print("Outputshoutput: "+ outputshoutput);
+        if(outputshoutput == "Success"){
+
+          try{
+            User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)).user;
+            print("Registered user => " + user.uid);
+            return user.uid;
+          }
+          catch(e){
+            print("Error => $e");
+            return "Error while Registering User!!";
+          }
+        }
+        else{
+          showErrorDialog(context,"OTP Error","Please enter a valid OTP.");
+          return "OTP Verification failed!!";
+        }
       }
     }
     else{
