@@ -28,6 +28,7 @@ class _RootPageState extends State<RootPage> {
     auth.currentUser().then((String userId) {
       setState(() {
         authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+        print(authStatus);
       });
     });
   }
