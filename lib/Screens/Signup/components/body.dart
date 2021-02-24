@@ -1,3 +1,5 @@
+import 'package:Helper_Hiring_System/Screens/role_selection/role_selection.dart';
+import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 import 'package:Helper_Hiring_System/Screens/Signup/components/background.dart';
@@ -10,7 +12,6 @@ import 'package:Helper_Hiring_System/components/already_have_an_account_acheck.d
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:Helper_Hiring_System/components/text_field_container.dart';
-import 'package:Helper_Hiring_System/role_selection/role_selection.dart';
 // import 'address_search.dart';
 // import 'loc_apicall.dart';
 // import 'package:uuid/uuid.dart';
@@ -26,7 +27,8 @@ import 'package:file_picker/file_picker.dart';
 // import 'package:flutter_svg/svg.dart';
 FlutterOtp otp = FlutterOtp();
 class Body extends StatefulWidget {
-  
+  final BaseAuth auth;
+  Body({this.auth});
   @override
   _Bodystate createState() => _Bodystate();
 }
@@ -38,9 +40,9 @@ class _Bodystate extends State<Body> {
     _c = new TextEditingController();
     super.initState();
   }
-  // final _controller = TextEditingController();
+
   TextEditingController _controller = TextEditingController();
-  // String _city = '';
+  
   String _email = '';
   String _password = '';
   String _name = '';
@@ -302,11 +304,12 @@ class _Bodystate extends State<Body> {
                     color: kPrimaryColor,
 
                     onPressed: () async{
+                      _c.clear();
                       String useruid = await validateAndSubmit(context);
                       print("apna Userid: "+ useruid);
                       if(useruid != "Error while Registering User!!" && useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Upload Aadhar field empty!!"){
                         Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => RoleSelection(name: _name, email: _email, contactno: _contactno,state:  _state, city: _cityarea,password: _password, file:file)));
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => RoleSelection(auth:widget.auth ,name: _name, email: _email, contactno: _contactno,state:  _state, city: _cityarea,password: _password, file:file)));
                     }
                     else{
                       print('OTP verification failed!!');
@@ -351,6 +354,18 @@ class _Bodystate extends State<Body> {
         if(result != null) {
           file = File(result.files.single.path);
           print("File path from upload func: "+file.path);
+          final snackBar = SnackBar(
+            content: Text('File Uploaded!'),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          );
+
+          // Find the Scaffold in the widget tree and use
+          // it to show a SnackBar.
+         Scaffold.of(context).showSnackBar(snackBar);
+          
         } else {
           // User canceled the picker
         }
@@ -382,7 +397,7 @@ class _Bodystate extends State<Body> {
                   controller: _c,
                   decoration: InputDecoration(
                     icon: Icon(
-                      Icons.one_k_plus,
+                      Icons.lock,
                       color: kPrimaryColor,
                     ),
                     hintText: "Enter OTP",
@@ -395,12 +410,17 @@ class _Bodystate extends State<Body> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Check OTP'),
+              child: Text('Check OTP', style: TextStyle(color: kPrimaryColor),),
               style: ButtonStyle(),
               onPressed: () {
                 print('_c.text: '+_c.text);
                 setState(() {
-                  enteredotp = int.parse(_c.text);
+                  if(_c.text == ""){
+                    enteredotp = 20;
+                  }
+                  else{
+                    enteredotp = int.parse(_c.text);
+                  }
                 });
                 print('Entered OTP is: '+ enteredotp.toString());
                 print('Random Number is: '+ randomNumber.toString());
@@ -408,12 +428,14 @@ class _Bodystate extends State<Body> {
                     print('Success');
                     outputshoutput = 'Success';
                     print('Success ho gaya aur outputshoutput: '+outputshoutput);
+                    _c.clear();
                     Navigator.pop(context,outputshoutput);
                     
                 } else {
                     print('Failed');
                     outputshoutput = 'Failure';
                     print('Fail ho gaya aur outputshoutput: '+outputshoutput);
+                    _c.clear();
                     Navigator.pop(context,outputshoutput);
                 }
               },
@@ -458,9 +480,11 @@ class _Bodystate extends State<Body> {
       // print("File ka string value is: "+ (filepath.toString()));
       if(file == null){
         showErrorDialog(context, "Upload Error", "Please Upload Aadhar Card");
+        
         return "Upload Aadhar field empty!!";
       }
       else{
+        
         Random random = new Random();
         randomNumber = random.nextInt(maxNumber)+minNumber;
         otp.sendOtp(_contactno, "Your OTP is: "+ randomNumber.toString(), minNumber, maxNumber, countryCode);
@@ -476,6 +500,12 @@ class _Bodystate extends State<Body> {
           }
           catch(e){
             print("Error => $e");
+            if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
+              showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
+            }
+            else{
+              showErrorDialog(context,"Signup Error",e.toString());
+            }
             return "Error while Registering User!!";
           }
         }

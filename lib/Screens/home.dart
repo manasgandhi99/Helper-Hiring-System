@@ -1,10 +1,11 @@
+import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
-import 'auth.dart';
-import 'auth_provider.dart';
+import '../auth.dart';
 
 class Home extends StatefulWidget {
+  final BaseAuth auth;
   final VoidCallback onSignedOut; 
-  Home({this.onSignedOut});
+  Home({this.auth,this.onSignedOut});
 
   @override
   _HomeState createState() => _HomeState();
@@ -19,9 +20,14 @@ class _HomeState extends State<Home> {
         actions: <Widget>[
           FlatButton(
             child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
-            onPressed: () => _signOut(context),
+            onPressed: () {
+              _signOut(context);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+            } 
           )
         ],
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         child: Center(child: Text('This is Employer Side', style: TextStyle(fontSize: 32.0))),
@@ -29,15 +35,14 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> _signOut(BuildContext context) async {
+  void _signOut(BuildContext context) async {
     try {
-      final BaseAuth auth = AuthProvider.of(context).auth;
-      await auth.signOut();
-      widget.onSignedOut();
-    } catch (e) {
+      await widget.auth.signOut();
+      // widget.onSignedOut();
+    } 
+    catch (e) {
+      print("Error in Signout!!");
       print(e);
     }
   }
-
-  
 }

@@ -1,5 +1,6 @@
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
+import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 // import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
@@ -10,6 +11,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:Helper_Hiring_System/root_page.dart';
 
 class Body extends StatelessWidget {
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+  Body({this.auth,this.onSignedIn});
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,11 +37,12 @@ class Body extends StatelessWidget {
             RoundedButton(
               text: "LOGIN",
               press: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return LoginScreen();
+                      return LoginScreen(auth: auth,onSignedIn: onSignedIn,);
                     },
                   ),
                 );
@@ -47,11 +53,12 @@ class Body extends StatelessWidget {
               color: kPrimaryLightColor,
               textColor: Colors.black,
               press: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return SignUpScreen();
+                      return SignUpScreen(auth: auth);
                     },
                   ),
                 );

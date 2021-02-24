@@ -1,10 +1,13 @@
+import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
-import 'auth.dart';
-import 'auth_provider.dart';
+
+import '../auth.dart';
+
 
 class HelperHome extends StatefulWidget {
+  final BaseAuth auth;
   final VoidCallback onSignedOut; 
-  HelperHome({this.onSignedOut});
+  HelperHome({this.auth,this.onSignedOut});
 
   @override
   _HelperHomeState createState() => _HelperHomeState();
@@ -19,9 +22,14 @@ class _HelperHomeState extends State<HelperHome> {
         actions: <Widget>[
           FlatButton(
             child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
-            onPressed: () => _signOut(context),
+            onPressed: () {
+              _signOut(context);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+            },
           )
         ],
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         child: Center(child: Text('This is Helper Side', style: TextStyle(fontSize: 32.0))),
@@ -29,11 +37,10 @@ class _HelperHomeState extends State<HelperHome> {
     );
   }
 
-  Future<void> _signOut(BuildContext context) async {
+  void _signOut(BuildContext context) async {
     try {
-      final BaseAuth auth = AuthProvider.of(context).auth;
-      await auth.signOut();
-      widget.onSignedOut();
+      // final BaseAuth auth = AuthProvider.of(context).auth;
+      await widget.auth.signOut();
     } catch (e) {
       print(e);
     }

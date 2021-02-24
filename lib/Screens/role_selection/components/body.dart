@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 // import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
@@ -5,8 +6,6 @@ import 'package:Helper_Hiring_System/Screens/Welcome/components/background.dart'
 // import 'package:Helper_Hiring_System/components/rounded_button.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:Helper_Hiring_System/home.dart';
-import 'package:Helper_Hiring_System/helper_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,10 +14,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
+import '../../../root_page.dart';
+
+
+
 
 class Body extends StatefulWidget {
   
   // final VoidCallback onSignedUp;
+  final BaseAuth auth;
   final String name;
   final String email;
   final String contactno;
@@ -26,7 +30,7 @@ class Body extends StatefulWidget {
   final String city;
   final String password;
   final File file;
-  Body({this.name, this.email, this.contactno, this.state, this.city, this.password, this.file});
+  Body({this.auth,this.name, this.email, this.contactno, this.state, this.city, this.password, this.file});
 
   @override
   _BodyState createState() => _BodyState();
@@ -93,7 +97,7 @@ class _BodyState extends State<Body> {
                         print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
                         store();
                         Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => Home()));
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         },
                         child: Text(
                           "I want a Helper",
@@ -118,7 +122,7 @@ class _BodyState extends State<Body> {
                         print("Helper Store Function Call!!!!!!!!!!!!!!!!!");
                         helperstore();
                         Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => HelperHome()));
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         },
                         child: Text(
                           "I want a Job",

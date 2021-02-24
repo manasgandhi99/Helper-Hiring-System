@@ -9,22 +9,26 @@ import 'package:Helper_Hiring_System/components/already_have_an_account_acheck.d
 import 'package:flutter_svg/svg.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:Helper_Hiring_System/components/text_field_container.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Helper_Hiring_System/home.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:Helper_Hiring_System/helper_home.dart';
-
+import 'package:Helper_Hiring_System/auth.dart';
+import '../../../root_page.dart';
 
 class Body extends StatefulWidget {
-  
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+  Body({this.auth,this.onSignedIn});
+
+
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>(); 
-  String _email = '';
-  String _password = '';
+  String email = '';
+  String password = '';
+  bool boolValue;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +78,7 @@ class _BodyState extends State<Body> {
                   hintText: "Email",
                   border: InputBorder.none,
                 ),
-                onSaved: (value) => _email = value,
+                onSaved: (value) => email = value,
               ),
               ),
 
@@ -106,7 +110,7 @@ class _BodyState extends State<Body> {
                   ),
                   border: InputBorder.none,
                 ),
-                onSaved: (value) => _password = value,
+                onSaved: (value) => password = value,
               ),
               ),
 
@@ -121,21 +125,23 @@ class _BodyState extends State<Body> {
                     onPressed: () async{
                       String useruid = await validateAndSubmit();
                       print("apna Userid: "+ useruid);
+                      
                       if(useruid != "User doesn't Exist!!" && useruid != "Error in Validation!!"){
                         print("andar aaya");
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        //Return bool
-                        bool boolValue = prefs.getBool("pref"+_email);
-                        print("Variable for user: "+"pref"+_email);
-                        print('BoolValue'+ boolValue.toString());
-                        if(boolValue){
-                          Navigator.pop(context);
-                          Navigator.push(context , MaterialPageRoute(builder: (context) => Home()));
-                        }
-                        else{
-                          Navigator.pop(context);
-                          Navigator.push(context , MaterialPageRoute(builder: (context) => HelperHome()));
-                        }
+                        // SharedPreferences prefs = await SharedPreferences.getInstance();
+                        // //Return bool
+                        // boolValue = prefs.getBool("pref" + email);
+                        // print("Variable for user: "+"pref" + email);
+                        // print('BoolValue'+ boolValue.toString());
+                        // widget.onSignedIn();
+                        // if(boolValue){ 
+                        Navigator.pop(context);
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        // }
+                        // else{
+                        //   Navigator.pop(context);
+                        //   Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        // }
                       } 
                     },
                     child: Text(
@@ -180,14 +186,16 @@ class _BodyState extends State<Body> {
 
   Future<String> validateAndSubmit() async{
     if(validateAndSave()){
+      // final BaseAuth auth = AuthProvider.of(context).auth;
       try{
-        User user = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password)).user;
-      
-        print("Logged In user => " + user.uid);
-        return user.uid;
+        String user = await widget.auth.signInWithEmailAndPassword(email, password);
+        print("Logged In user => " + user);
+        
+        return user;
       }
       catch(e){
         print("Error => $e");
+        print("Email: " + email + " Password: " + password );
         return "User doesn't Exist!!";
       }
     }

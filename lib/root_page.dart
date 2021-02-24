@@ -1,11 +1,14 @@
-import 'package:Helper_Hiring_System/role_selection/role_selection.dart';
+import 'package:Helper_Hiring_System/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/auth.dart';
-import 'package:Helper_Hiring_System/home.dart';
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
-import 'package:Helper_Hiring_System/auth_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Screens/helper_home.dart';
+import 'Screens/home.dart';
 
 class RootPage extends StatefulWidget {
+  final BaseAuth auth;
+  RootPage({this.auth});
   @override
   State<StatefulWidget> createState() => _RootPageState();
 }
@@ -18,43 +21,39 @@ enum AuthStatus {
 }
 
 class _RootPageState extends State<RootPage> {
-  AuthStatus authStatus = AuthStatus.notDetermined;
-  // final BaseAuth auth ;
+  bool role = false;
+  AuthStatus authStatus = AuthStatus.notSignedIn;
+  // final BaseAuth auth = BaseAuth();
   // String _userId;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final BaseAuth auth = AuthProvider.of(context).auth;
-    auth.currentUser().then((String userId) {
-      setState(() {
-        authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
-        print(authStatus);
-      });
-    });
-  }
   // @override
-  // void initState() {
-  //   super.initState();
-  //   auth.currentUser().then((user) {
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final BaseAuth auth = AuthProvider.of(context).auth;
+  //   auth.currentUser().then((String userId) {
   //     setState(() {
-  //       if (user != null) {
-  //         _userId = user;
-  //       }
-  //       authStatus =
-  //           user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
-  //       if (user?.uid == null) {
-  //         globals.isLoggedIn = false;
-  //       } else {
-  //         globals.isLoggedIn = true;
-  //         checkHistoryStatus(user.email);
-  //       }
+  //       authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
   //     });
   //   });
   // }
+  @override
+  void initState() {
+    super.initState();
+    widget.auth.currentUser().then((useremail) {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences.getInstance().then((prefs) {
+        setState(() {
+        role = prefs.getBool("pref" + useremail);
+        authStatus = useremail == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+        });
+      });
+    });
+  }
 
   void _signedIn() {
+    print("_signedIn k andar aaya!!!!");
     setState(() {
       authStatus = AuthStatus.signedIn;
+      
     });
   }
 
@@ -72,23 +71,43 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build k andar aaya !!!! Authstatus: " + authStatus.toString());
+
     switch (authStatus) {
+
       case AuthStatus.notDetermined:
         return _buildWaitingScreen();
+        break;
+
       case AuthStatus.notSignedIn:
-        return LoginScreen(
+        return WelcomeScreen(
+          auth: widget.auth,
           onSignedIn: _signedIn,
         );
+        break;
+
       case AuthStatus.signedIn:
-        return Home(
-          onSignedOut: _signedOut,
-        );
+        if(role){
+          return Home(
+            auth: widget.auth,
+            onSignedOut: _signedOut,
+          );
+        }
+        else{
+          return HelperHome(
+            auth: widget.auth,
+            onSignedOut: _signedOut,
+          );
+        }
+        break;
       // case AuthStatus.signedUp:
       //   return RoleSelection(
       //     onSignedUp: _signedUp,
       //   );
+      default:
+        return _buildWaitingScreen();
     }
-    return null;
+   
   }
 
   Widget _buildWaitingScreen() {
@@ -99,4 +118,5 @@ class _RootPageState extends State<RootPage> {
       ),
     );
   }
+
 }
