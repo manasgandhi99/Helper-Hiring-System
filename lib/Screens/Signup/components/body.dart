@@ -17,9 +17,11 @@ import 'package:Helper_Hiring_System/components/text_field_container.dart';
 // import 'package:uuid/uuid.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'dart:math';
 import 'package:file_picker/file_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // import 'dart:convert';
 
@@ -170,6 +172,29 @@ class _Bodystate extends State<Body> {
                 onSaved: (value) => _contactno = value,
               ),
               ),
+
+              TextFieldContainer(
+              //   child:TextFormField(
+              //   validator: (value){
+              //     if(value.isEmpty){
+              //       return "Please enter some value";
+              //     }
+              //     return null;
+              //   },
+              //   cursorColor: kPrimaryColor,
+                
+              //   decoration: InputDecoration(
+              //     icon: Icon(
+              //       Icons.my_location,
+              //       color: kPrimaryColor,
+              //     ),
+              //     hintText: "State",
+              //     border: InputBorder.none,
+              //   ),
+              //   onSaved: (value) => _state = value,
+              // ),
+                child: stateDropdown(context), 
+              ),
               
               TextFieldContainer(
                 child:TextFormField(
@@ -217,27 +242,6 @@ class _Bodystate extends State<Body> {
                 ),
               ),
               
-              TextFieldContainer(
-                child:TextFormField(
-                validator: (value){
-                  if(value.isEmpty){
-                    return "Please enter some value";
-                  }
-                  return null;
-                },
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.my_location,
-                    color: kPrimaryColor,
-                  ),
-                  hintText: "State",
-                  border: InputBorder.none,
-                ),
-                onSaved: (value) => _state = value,
-              ),
-              ),
-
               TextFieldContainer(
                 child:TextFormField(
                 validator: (value){
@@ -345,6 +349,82 @@ class _Bodystate extends State<Body> {
           ),
         )
       ),
+    );
+  }
+
+  var _states = 
+      [
+        "Andaman and Nicobar Islands",
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chandigarh",
+        "Chhattisgarh",
+        "Dadra and Nagar Haveli",
+        "Daman and Diu",
+        "Delhi",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jammu and Kashmir",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Ladakh",
+        "Lakshadweep",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Puducherry",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal"
+        ];
+
+  var _currentSelectedValue = "";
+
+  Widget stateDropdown(BuildContext context) {
+    return FormField<String>(
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+              labelStyle: GoogleFonts.lato(),
+              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+              hintText: 'Select Your State',
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+          isEmpty: _currentSelectedValue == '',
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _currentSelectedValue,
+              isDense: true,
+              onChanged: (String newValue) {
+                setState(() {
+                  _currentSelectedValue = newValue;
+                  state.didChange(newValue);
+                });
+              },
+              items: _states.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextStyle(fontSize: 10.0,))
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
     );
   }
 

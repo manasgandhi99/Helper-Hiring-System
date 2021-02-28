@@ -1,6 +1,7 @@
 import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
 import '../auth.dart';
+import 'new_home.dart';
 
 class Home extends StatefulWidget {
   final BaseAuth auth;
@@ -21,9 +22,11 @@ class _HomeState extends State<Home> {
           FlatButton(
             child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
             onPressed: () {
-              _signOut(context);
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              // _signOut(context);
+              // Navigator.pop(context);
+              // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              // Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder:(context) => NewHome()));
             } 
           )
         ],
