@@ -174,26 +174,26 @@ class _Bodystate extends State<Body> {
               ),
 
               TextFieldContainer(
-              //   child:TextFormField(
-              //   validator: (value){
-              //     if(value.isEmpty){
-              //       return "Please enter some value";
-              //     }
-              //     return null;
-              //   },
-              //   cursorColor: kPrimaryColor,
+                child:TextFormField(
+                validator: (value){
+                  if(value.isEmpty){
+                    return "Please enter some value";
+                  }
+                  return null;
+                },
+                cursorColor: kPrimaryColor,
                 
-              //   decoration: InputDecoration(
-              //     icon: Icon(
-              //       Icons.my_location,
-              //       color: kPrimaryColor,
-              //     ),
-              //     hintText: "State",
-              //     border: InputBorder.none,
-              //   ),
-              //   onSaved: (value) => _state = value,
-              // ),
-                child: stateDropdown(context), 
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.my_location,
+                    color: kPrimaryColor,
+                  ),
+                  hintText: "State",
+                  border: InputBorder.none,
+                ),
+                onSaved: (value) => _state = value,
+              ),
+                // child: stateDropdown(context), 
               ),
               
               TextFieldContainer(

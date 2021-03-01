@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/Screens/result.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -45,7 +46,7 @@ class CustomCard extends StatelessWidget {
             ],
           )),
       onTap: () {
-        
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> Result()));
       },
     );
   }

@@ -3,20 +3,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/customcard.dart';
 import 'package:Helper_Hiring_System/constants.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../auth.dart';
+import 'dart:io';
 // import '../constants.dart';
 
 class NewHome extends StatefulWidget {
+  final BaseAuth auth;
+  NewHome({this.auth});
   @override
   _NewHomeState createState() => _NewHomeState();
 }
 
 class _NewHomeState extends State<NewHome> {
   int i = 0;
+  String _city;
+  String _state;
   // var data = informationList;
   final String assetimage = 'assets/images/user1.png';
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.amber[300],
       resizeToAvoidBottomPadding: false,
@@ -60,14 +68,23 @@ class _NewHomeState extends State<NewHome> {
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold),
                           )),
-                        Image.asset(
-                        assetimage,
-                        height: 60,
-                        width: 75,
-                      ),
+
+                        Container(
+                            margin: EdgeInsets.fromLTRB(0,0,size.width*0.06,0),
+                            width: 60,
+                            height: 75,
+                            decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage(assetimage),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                )), // Blue Part
+                )),
+                 // Blue Part
             Container(
                 decoration: BoxDecoration(
                     color: Color(0xFFfafafa),
@@ -128,7 +145,7 @@ class _NewHomeState extends State<NewHome> {
                                       child: Image.asset("assets/images/maid.jpg",  height: MediaQuery.of(context).size.height / 10,width: MediaQuery.of(context).size.width / 5, )),
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(12, 2, 0, 0),
-                                    child: Text("Helper",
+                                    child: Text("House Help",
                                         style: GoogleFonts.roboto(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
@@ -136,8 +153,9 @@ class _NewHomeState extends State<NewHome> {
                                   )
                                 ],
                               )),
-                          onTap: () {
-                            
+                          onTap: ()async{
+                            await getData();
+                            setData('house_help');
                           },
                         ),
                         CustomCard("Cook", "assets/images/maid.jpg"),
@@ -174,5 +192,38 @@ class _NewHomeState extends State<NewHome> {
         ),
       ]),
     );
+  }
+
+  Future<void> getData() async {
+    final user = await widget.auth.currentUser();
+    print(user);
+    
+    FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
+    .snapshots().listen((data)  {
+      _city = data.docs[0]['city'];
+      _state = data.docs[0]['state'];
+      print('City: $_city');
+      print('State: $_state');
+    }
+    );
+  }
+
+  Future<void> setData(String category) async {
+    print("set data me city"+_city);
+    try{
+      final user = await widget.auth.currentUser();
+      print(user);
+      await FirebaseFirestore.instance
+        .collection('employer')
+        .doc(user)
+        .collection('filter')
+        .doc(category)
+        .set(
+        {'city': _city,'state': _state, 'religion': "",'duration': "", 'gender': "", 'budget': "", 'yearofexp': ""});
+    }
+    catch(e){
+      print("Error: " + e);
+    }
+    
   }
 }

@@ -28,7 +28,7 @@ class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>(); 
   String email = '';
   String password = '';
-  bool boolValue;
+  bool boolValue = false;
 
   @override
   Widget build(BuildContext context) {

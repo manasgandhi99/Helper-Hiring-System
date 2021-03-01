@@ -20,13 +20,23 @@ class _HomeState extends State<Home> {
         title: Text('Welcome'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
+            child: Text('New Home', style: TextStyle(fontSize: 17.0, color: Colors.white)),
             onPressed: () {
               // _signOut(context);
               // Navigator.pop(context);
               // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
               // Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder:(context) => NewHome()));
+              Navigator.push(context, MaterialPageRoute(builder:(context) => NewHome(auth: widget.auth)));
+            } 
+          ),
+          FlatButton(
+            child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
+            onPressed: () {
+              _signOut(context);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              // Navigator.pop(context);
+            //  _signOut(context);
             } 
           )
         ],
