@@ -1,12 +1,13 @@
+import 'package:Helper_Hiring_System/Screens/result.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/customcard.dart';
 import 'package:Helper_Hiring_System/constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth.dart';
-import 'dart:io';
+// import 'dart:io';
 // import '../constants.dart';
 
 class NewHome extends StatefulWidget {
@@ -115,50 +116,19 @@ class _NewHomeState extends State<NewHome> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // CustomCard(data[0][0], "4 lights", 'assets/bed.png'),
-                        // CustomCard(
-                        //     "Living Room", "2 lights", 'assets/room.png'),
-                        GestureDetector(
-                          child: Container(
-                              height: MediaQuery.of(context).size.height / 6,
-                              width: MediaQuery.of(context).size.width / 3.1,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey[100],
-                                      spreadRadius: 10,
-                                      blurRadius: 7,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(20))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                                      child: Image.asset("assets/images/maid.jpg",  height: MediaQuery.of(context).size.height / 10,width: MediaQuery.of(context).size.width / 5, )),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(12, 2, 0, 0),
-                                    child: Text("House Help",
-                                        style: GoogleFonts.roboto(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black)),
-                                  )
-                                ],
-                              )),
-                          onTap: ()async{
-                            await getData();
-                            setData('house_help');
-                          },
+                        
+                        CustomCard(      
+                          header: "House Help",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'house_help'
                         ),
-                        CustomCard("Cook", "assets/images/maid.jpg"),
+                        CustomCard(      
+                          header: "Cook",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'cook'
+                        ),
                         // for (i; i < 2; i++)
                         //   CustomCard(data[i][0], data[i][1], data[i][2]),
                       ],
@@ -169,8 +139,18 @@ class _NewHomeState extends State<NewHome> {
                         // CustomCard("Kitchen", "5 lights", 'assets/images/kitchen.png'),
                         // CustomCard(
                         //     "Bathroom", "1 light", 'assets/images/bathtube.png'),
-                        CustomCard("Elderly Care", "assets/images/maid.jpg"),
-                        CustomCard("Babysitting", "assets/images/maid.jpg"),
+                        CustomCard(      
+                          header: "Elderly Care",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'elderly_care'
+                        ),
+                        CustomCard(      
+                          header: "BabySitting",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'babysitting'
+                        ),
                         // for (i; i < 4; i++)
                         //   CustomCard(data[i][0], data[i][1], data[i][2]),
                       ],
@@ -180,14 +160,24 @@ class _NewHomeState extends State<NewHome> {
                       children: [
                         // CustomCard("Outdoor", "5 lights", 'assets/images/house.png'),
                         // CustomCard("Balcony", "2 lights", 'assets/images/balcony.png'),
-                        CustomCard("Office Help", "assets/images/maid.jpg"),
-                        CustomCard("Patient Care", "assets/images/maid.jpg"),
+                        CustomCard(      
+                          header: "Office Help",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'office_help'
+                        ),
+                        CustomCard(      
+                          header: "Patient Care",
+                          displayImage: "assets/images/maid.jpg",
+                          auth: widget.auth,
+                          category :'patient_care'
+                        ),
                         // for (i; i < 6; i++)
                         //   CustomCard(data[i][0], data[i][1], data[i][2]),
-                      ],
-                    )
                   ],
-                ))
+                )
+              ],
+            ))
           ],
         ),
       ]),
