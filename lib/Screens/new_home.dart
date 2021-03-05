@@ -84,8 +84,9 @@ class _NewHomeState extends State<NewHome> {
                         ),
                     ],
                   ),
-                )),
-                 // Blue Part
+                )
+              ),
+                 
             Container(
                 decoration: BoxDecoration(
                     color: Color(0xFFfafafa),

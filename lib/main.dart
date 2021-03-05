@@ -5,6 +5,7 @@ import 'package:Helper_Hiring_System/Screens/Welcome/welcome_screen.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'auth.dart';
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
