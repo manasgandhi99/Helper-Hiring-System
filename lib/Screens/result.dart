@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/Screens/indetail.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter/material.dart';
 import '../auth.dart';
@@ -140,6 +141,7 @@ class _ResultState extends State<Result> {
                 ),
           ],
         ),
+
         body: flag ? 
           Center(
             child: Text("No Matches Found",style: TextStyle(fontSize: 20),),
@@ -241,7 +243,28 @@ class _ResultState extends State<Result> {
                                               fontSize: 15,
                                               fontWeight: FontWeight.w700,
                                               color: Colors.black),
-                                        )
+                                        ),
+
+                                        Container(
+                                          margin: EdgeInsets.symmetric(vertical: 2),
+                                          width: size.width * 0.2,
+                                          
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(55),
+                                            child: FlatButton(
+                                              padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+                                              color: kPrimaryColor,
+                                              onPressed: (){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail()));
+                                              },
+                                              child: Text(
+                                                "View Details",
+                                                style: TextStyle(color: Colors.white, fontSize: 10),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
                                       ],
                                     ),
                                   )
