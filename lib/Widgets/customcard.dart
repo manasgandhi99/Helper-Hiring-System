@@ -19,6 +19,7 @@ class CustomCard extends StatelessWidget {
   List<String> items1 = [];
   Map<int, List> helper_data = {0:["demo","demo1"]};
   Map<int, List> helper_data_new = {0: ["https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png", "demo6", "27", "male", "6"], 1: ["https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png", "demo6", "27", "male", "6"]};
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

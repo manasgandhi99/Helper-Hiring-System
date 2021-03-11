@@ -94,7 +94,10 @@ class _ResultState extends State<Result> {
               print("Event.docs k andar aaya!!");
               print("i ka value: ");
               print(i);
-              helper_data[i] = [event.docs[0]['photo'], event.docs[0]['name'], event.docs[0]['age'], event.docs[0]['gender'], event.docs[0]['years of experience']];
+              helper_data[i] = [event.docs[0]['photo'], event.docs[0]['name'], event.docs[0]['age'], event.docs[0]['gender'], 
+                                event.docs[0]['years of experience'], event.docs[0]['address'], event.docs[0]['duration'], 
+                                event.docs[0]['exp salary'], event.docs[0]['religion'], event.docs[0]['marital status'], 
+                                event.docs[0]['language'], event.docs[0]['category'], event.docs[0]['contact no']];
               i = i+1;
               print("event docs k andar ka helper data");
               print(helper_data);
@@ -255,7 +258,7 @@ class _ResultState extends State<Result> {
                                               padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                                               color: kPrimaryColor,
                                               onPressed: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail()));
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(helper_data_new: helper_data_new[index])));
                                               },
                                               child: Text(
                                                 "View Details",
