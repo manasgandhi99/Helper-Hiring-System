@@ -1,4 +1,3 @@
-import 'package:Helper_Hiring_System/Screens/detail_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:url_launcher/url_launcher.dart'; 

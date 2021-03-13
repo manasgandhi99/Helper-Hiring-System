@@ -7,6 +7,7 @@ import 'package:Helper_Hiring_System/constants.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth.dart';
+import 'dart:math';
 // import 'dart:io';
 // import '../constants.dart';
 
@@ -18,6 +19,13 @@ class NewHome extends StatefulWidget {
 }
 
 class _NewHomeState extends State<NewHome> {
+
+  // void initState() { 
+  //   super.initState();
+  //   script();
+  //   print("script run");
+  // }
+  
   int i = 0;
   String _city;
   String _state;
@@ -75,11 +83,11 @@ class _NewHomeState extends State<NewHome> {
                             width: 60,
                             height: 75,
                             decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage(assetimage),
-                              fit: BoxFit.cover,
-                            ),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(assetimage),
+                                fit: BoxFit.cover,
+                              ),
                           ),
                         ),
                     ],
@@ -217,4 +225,108 @@ class _NewHomeState extends State<NewHome> {
     }
     
   }
+
+  // Future<void> script() async {
+  //   List name  = ['Abhishek','Sameer','Faisal','Sandeep','Manoj','Gauri','Shruti','Payal','Shivangi','Kamala'];
+  //   // List states = ['Maharashtra','Goa'];
+  //   // List cities = ['Parbhani','Panji'];
+  //   // List categories = ['house_help','cook'];
+  //   List durations = ['Less than 2','2-4','4-6', 'More than 6'];
+  //   List marriage = ['Unmarried', 'Married'];
+  //   List photos = ['https://media.gettyimages.com/photos/indian-men-portrait-picture-id861530218?s=612x612','https://media.gettyimages.com/photos/farmer-standing-portrait-picture-id503733688?s=612x612','https://static3.bigstockphoto.com/6/9/7/large1500/7963525.jpg'];
+  //   List femalephotos = ['https://assetsds.cdnedge.bluemix.net/sites/default/files/styles/big_5/public/feature/images/sabira_0.jpg?itok=P9GfOo9m', 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8bGFkeXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr75ollz6vjM5jX3zhXmOGE_65VaT7n3rVTw&usqp=CAU'];
+  //   List religions = ['Hindu', 'Muslim', 'Christian', 'Sikh'];
+
+  //     for(int i=1;i<=10;i++){
+  //       await FirebaseFirestore.instance
+  //       .collection('helper')
+  //       .doc(name[i-1].toLowerCase() +"@gmail.com")
+  //       .set(
+  //       { 
+  //         'name': name[i-1],
+  //         'email': name[i-1].toLowerCase() +"@gmail.com", 
+  //         'password': '123456',
+  //         'contact no': '7977861078', 
+  //         'state': 'Maharashtra', 
+  //         'city': 'Parbhani', 
+  //         'category': 'house_help',
+  //         'aadhar':'https://firebasestorage.googleapis.com/v0/b/helper-hiring-backend.appspot.com/o/demo12%40gmail.com%2FIMG-20210224-WA0000.jpg?alt=media&token=b0c9855d-0397-44ae-b17b-a4cd0d8ffe7f',
+  //       }); 
+  //     }
+    
+  //     for(int i=1;i<=5;i++){
+        
+  //       Random random = new Random();
+  //       // Random random = new Random();
+  //       // int randomNumber = random.nextInt(2);
+  //       await FirebaseFirestore.instance
+  //       .collection('helper')
+  //       .doc(name[i-1].toLowerCase() +"@gmail.com")
+  //       .collection('profile')
+  //       .doc(name[i-1].toLowerCase() +"@gmail.com")
+  //       .set(
+  //       { 
+  //         'name': name[i-1],
+  //         'address': 'Address'+ i.toString(),
+  //         'age': (random.nextInt(20)+20).toString(),
+  //         'duration': durations[random.nextInt(4)],
+  //         'exp salary': (random.nextInt(3000)+6000).toString(),
+  //         'gender': 'Male',
+  //         'language': 'Hindi, Marathi',
+  //         'marital status': marriage[random.nextInt(2)],
+  //         'photo': photos[random.nextInt(3)],
+  //         'religion': religions[random.nextInt(4)],
+  //         'years of experience': (random.nextInt(15)+2).toString(),
+  //         'email': name[i-1].toLowerCase() +"@gmail.com", 
+  //         'password': '123456',
+  //         'contact no': '7977861078', 
+  //         'state': 'Maharashtra', 
+  //         'city': 'Parbhani', 
+  //         'category': 'house_help',
+  //       }); 
+  //     }
+
+  //     for(int i=6;i<=10;i++){
+        
+  //       Random random = new Random();
+  //       // int randomNumber = random.nextInt(2);
+  //       await FirebaseFirestore.instance
+  //       .collection('helper')
+  //       .doc(name[i-1].toLowerCase() +"@gmail.com")
+  //       .collection('profile')
+  //       .doc(name[i-1].toLowerCase() +"@gmail.com")
+  //       .set(
+  //       { 
+  //         'name': name[i-1],
+  //         'address': 'Address'+ i.toString(),
+  //         'age': (random.nextInt(20)+20).toString(),
+  //         'duration': durations[random.nextInt(4)],
+  //         'exp salary': (random.nextInt(3000)+6000).toString(),
+  //         'gender': 'Female',
+  //         'language': 'Hindi, Marathi',
+  //         'marital status': marriage[random.nextInt(2)],
+  //         'photo': femalephotos[random.nextInt(3)],
+  //         'religion': religions[random.nextInt(4)],
+  //         'years of experience': (random.nextInt(15)+2).toString(),
+  //         'email': name[i-1].toLowerCase() +"@gmail.com", 
+  //         'password': '123456',
+  //         'contact no': '7977861078', 
+  //         'state': 'Maharashtra', 
+  //         'city': 'Parbhani', 
+  //         'category': 'house_help',
+  //       }); 
+  //     }
+
+      // for(int i=6;i<=10;i++){
+
+      //   Random random = new Random();
+      //   int randomNumber = random.nextInt(2);
+      //   await FirebaseFirestore.instance
+      //   .collection('helper')
+      //   .doc(name[i-1]+"@gmail.com")
+      //   .set(
+      //   {'name':name[i-1],'email': name[i-1]+"@gmail.com", 'password':'123456','contact no': '7977861078', 'state': states[randomNumber], 'city': cities[randomNumber], 'aadhar':'https://firebasestorage.googleapis.com/v0/b/helper-hiring-backend.appspot.com/o/demo12%40gmail.com%2FIMG-20210224-WA0000.jpg?alt=media&token=b0c9855d-0397-44ae-b17b-a4cd0d8ffe7f'}); 
+      // }
+    
+  // }
 }

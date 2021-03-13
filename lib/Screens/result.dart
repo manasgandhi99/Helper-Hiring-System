@@ -25,6 +25,7 @@ class _ResultState extends State<Result> {
   Map<int, List> helper_data_new = {};
   bool flag = false;
   bool isLoading = true;
+  String categoryName = "";
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _ResultState extends State<Result> {
     // final user = await widget.auth.currentUser();
     // print(user);
     // await batch.commit();
-    int i = 0;
+    
     FirebaseFirestore.instance
         .collection('helper')
         .where('city', isEqualTo: infoCity)
@@ -80,6 +81,8 @@ class _ResultState extends State<Result> {
 
           print("Flag: "+flag.toString());
           print(lenData);
+
+          int i = 0;
           data.docs.forEach((result) async {
             print("Data.docs k andar aaya!!");
             print(result.data());
@@ -122,6 +125,24 @@ class _ResultState extends State<Result> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.category[0]=='h'){
+      categoryName ="House Help";
+    }
+    else if(widget.category[0]=='o'){
+      categoryName ="Office Help";
+    }
+    else if(widget.category[0]=='p'){
+      categoryName ="Patient Care";
+    }
+    else if(widget.category[0]=='c'){
+      categoryName ="Cook";
+    }
+    else if(widget.category[0]=='e'){
+      categoryName ="Elderly Care";
+    }
+    else if(widget.category[0]=='b'){
+      categoryName ="BabySitting";
+    }
     Size size = MediaQuery.of(context).size;
     print("Flag new" + flag.toString());
     print("build ka helper data");
@@ -130,7 +151,7 @@ class _ResultState extends State<Result> {
     print(lenData);
       return Scaffold(
         appBar: AppBar(
-          title: Text("Result"),
+          title: Text("Results for "+ categoryName ,style: TextStyle(fontSize: 17.0),),
           actions: [
              FlatButton(
                   onPressed: () => {},
