@@ -142,7 +142,8 @@ class _BodyState extends State<Body> {
                         //   Navigator.pop(context);
                         //   Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         // }
-                      } 
+                      }
+                      
                     },
                     child: Text(
                       "SIGNIN",
@@ -173,6 +174,33 @@ class _BodyState extends State<Body> {
     );
   }
 
+  showErrorDialog(BuildContext context,String title, String content) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK", style: TextStyle(color: kPrimaryColor),),
+      onPressed: () {
+        Navigator.pop(context,null);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   bool validateAndSave(){
     final isValid = _formKey.currentState.validate(); 
     if (isValid) { 
@@ -196,10 +224,12 @@ class _BodyState extends State<Body> {
       catch(e){
         print("Error => $e");
         print("Email: " + email + " Password: " + password );
+        showErrorDialog(context,"SignIn Error","Please enter the correct email and password.");
         return "User doesn't Exist!!";
       }
     }
     else{
+      // showErrorDialog(context,"Validation Error",);
       return "Error in Validation!!";
     }
     

@@ -13,11 +13,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
-
 import '../../../root_page.dart';
-
-
-
 
 class Body extends StatefulWidget {
   
@@ -149,7 +145,7 @@ class _BodyState extends State<Body> {
         .collection('employer')
         .doc(widget.email)
         .set(
-        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
+        {'name': widget.name,'email': widget.email, 'role':'employer','password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
     }
     catch(e){
       print("Error: " + e);
@@ -163,7 +159,7 @@ class _BodyState extends State<Body> {
         .collection('helper')
         .doc(widget.email)
         .set(
-        {'name': widget.name,'email': widget.email, 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
+        {'name': widget.name,'email': widget.email, 'role':'helper', 'password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
     }
     catch(e){
       print("Error: " + e);

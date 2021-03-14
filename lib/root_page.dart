@@ -1,4 +1,5 @@
 import 'package:Helper_Hiring_System/Screens/Welcome/welcome_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -21,7 +22,7 @@ enum AuthStatus {
 }
 
 class _RootPageState extends State<RootPage> {
-  bool role = false;
+  String role = "";
   AuthStatus authStatus = AuthStatus.notSignedIn;
   // final BaseAuth auth = BaseAuth();
   // String _userId;
@@ -40,12 +41,44 @@ class _RootPageState extends State<RootPage> {
     super.initState();
     widget.auth.currentUser().then((useremail) {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
-      SharedPreferences.getInstance().then((prefs) {
-        setState(() {
-        role = prefs.getBool("pref" + useremail);
-        authStatus = useremail == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+      // final user = await widget.auth.currentUser();
+      // print(user);
+      
+      // FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
+      // .snapshots().listen((data)  {
+      //   _city = data.docs[0]['city'];
+      //   _state = data.docs[0]['state'];
+      //   print('City: $_city');
+      //   print('State: $_state');
+      // }
+      // );
+      FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: useremail)
+      .snapshots().listen((data)  {
+        setState((){
+          role = data.docs[0]['role'];
+          print('Emp Role: $role');
         });
       });
+
+      FirebaseFirestore.instance.collection('helper').where('email', isEqualTo: useremail)
+      .snapshots().listen((data)  {
+        setState((){
+          role = data.docs[0]['role'];
+          print('Help Role: $role');
+        });
+      });
+
+      // if(role==""){
+      //   setState(() {
+      //     role = "no role";
+      //   });
+      // }
+
+      // SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        authStatus = useremail == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+      });
+      // });
     });
   }
 
@@ -53,7 +86,6 @@ class _RootPageState extends State<RootPage> {
     print("_signedIn k andar aaya!!!!");
     setState(() {
       authStatus = AuthStatus.signedIn;
-      
     });
   }
 
@@ -87,18 +119,30 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.signedIn:
-        if(role){
+        if(role==""){
+          return Scaffold(
+            body: Center(child:CircularProgressIndicator()),
+          );
+        }
+
+        // else if(role == "no role"){
+        //   return
+        // }
+
+        else if(role == "employer"){
           return Home(
             auth: widget.auth,
             onSignedOut: _signedOut,
           );
         }
-        else{
+
+        else {
           return HelperHome(
             auth: widget.auth,
             onSignedOut: _signedOut,
           );
         }
+
         break;
       // case AuthStatus.signedUp:
       //   return RoleSelection(

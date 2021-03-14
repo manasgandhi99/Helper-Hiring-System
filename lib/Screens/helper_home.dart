@@ -24,8 +24,8 @@ class _HelperHomeState extends State<HelperHome> {
             child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
             onPressed: () {
               _signOut(context);
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              // Navigator.pop(context);
+              // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
             },
           )
         ],
@@ -41,6 +41,7 @@ class _HelperHomeState extends State<HelperHome> {
     try {
       // final BaseAuth auth = AuthProvider.of(context).auth;
       await widget.auth.signOut();
+      widget.onSignedOut();
     } catch (e) {
       print(e);
     }

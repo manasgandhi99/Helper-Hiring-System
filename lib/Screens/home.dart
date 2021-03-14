@@ -33,8 +33,8 @@ class _HomeState extends State<Home> {
             child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
             onPressed: () {
               _signOut(context);
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              // Navigator.pop(context);
+              // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
               // Navigator.pop(context);
             //  _signOut(context);
             } 
@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
   void _signOut(BuildContext context) async {
     try {
       await widget.auth.signOut();
-      // widget.onSignedOut();
+      widget.onSignedOut();
     } 
     catch (e) {
       print("Error in Signout!!");
