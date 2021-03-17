@@ -20,7 +20,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'dart:math';
-import 'package:file_picker/file_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // import 'dart:convert';
@@ -310,14 +309,14 @@ class _Bodystate extends State<Body> {
                     onPressed: () async{
                       _c.clear();
                       String useruid = await validateAndSubmit(context);
-                      print("apna Userid: "+ useruid);
-                      if(useruid != "Error while Registering User!!" && useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Upload Aadhar field empty!!"){
+                      print("Signup wala Userid: "+ useruid);
+                      if(useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Upload Aadhar field empty!!"){
                         Navigator.pop(context);
                         Navigator.push(context , MaterialPageRoute(builder: (context) => RoleSelection(auth:widget.auth ,name: _name, email: _email, contactno: _contactno,state:  _state, city: _cityarea,password: _password, file:file)));
-                    }
-                    else{
-                      print('OTP verification failed!!');
-                    }
+                        }
+                        else{
+                          print('OTP verification failed!!');
+                        }
                     },
                     child: Text(
                       "SIGNUP",
@@ -573,21 +572,22 @@ class _Bodystate extends State<Body> {
         print("Outputshoutput: "+ outputshoutput);
         if(outputshoutput == "Success"){
 
-          try{
-            User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)).user;
-            print("Registered user => " + user.uid);
-            return user.uid;
-          }
-          catch(e){
-            print("Error => $e");
-            if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
-              showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
-            }
-            else{
-              showErrorDialog(context,"Signup Error",e.toString());
-            }
-            return "Error while Registering User!!";
-          }
+          // try{
+          //   User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)).user;
+          //   print("Registered user => " + user.uid);
+          //   return user.uid;
+          // }
+          // catch(e){
+          //   print("Error => $e");
+          //   if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
+          //     showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
+          //   }
+          //   else{
+          //     showErrorDialog(context,"Signup Error",e.toString());
+          //   }
+          //   return "Error while Registering User!!";
+          // }
+          return "Success";
         }
         else{
           showErrorDialog(context,"OTP Error","Please enter a valid OTP.");

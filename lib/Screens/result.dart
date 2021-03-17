@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/Screens/filter.dart';
 import 'package:Helper_Hiring_System/Screens/indetail.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,9 @@ class _ResultState extends State<Result> {
           title: Text("Results for "+ categoryName ,style: TextStyle(fontSize: 17.0),),
           actions: [
              FlatButton(
-                  onPressed: () => {},
+                  onPressed: () => {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> Filter())),
+                  },
                   padding: EdgeInsets.only(top: size.height*0.006),
                   child: Column(
                     children: <Widget>[

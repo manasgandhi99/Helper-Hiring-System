@@ -8,12 +8,14 @@ import 'package:Helper_Hiring_System/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth.dart';
 import 'dart:math';
+import 'profile.dart';
 // import 'dart:io';
 // import '../constants.dart';
 
 class NewHome extends StatefulWidget {
   final BaseAuth auth;
-  NewHome({this.auth});
+  final VoidCallback onSignedOut; 
+  NewHome({Key k, this.auth, this.onSignedOut}):super(key: k);
   @override
   _NewHomeState createState() => _NewHomeState();
 }
@@ -29,35 +31,25 @@ class _NewHomeState extends State<NewHome> {
   int i = 0;
   String _city;
   String _state;
+  int _selectedIndex = 0;
   // var data = informationList;
   final String assetimage = 'assets/images/user1.png';
+
+  
+
+  
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Colors.amber[300],
-      resizeToAvoidBottomPadding: false,
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: kPrimaryLightColor,
-        selectedItemColor: kPrimaryColor,
-        backgroundColor: Colors.white,
-        elevation: 20.0,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Rate Card',
-          ),
-        ],
-      ),
-      body: Column(children: [
+    List<Widget> _widgetOptions = <Widget>[
+    Column(
+      children: [
         Column(
           children: [
             Container(
@@ -68,6 +60,7 @@ class _NewHomeState extends State<NewHome> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
                       Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Text(
@@ -78,18 +71,33 @@ class _NewHomeState extends State<NewHome> {
                                 fontWeight: FontWeight.bold),
                           )),
 
-                        Container(
-                            margin: EdgeInsets.fromLTRB(0,0,size.width*0.06,0),
-                            width: 60,
-                            height: 75,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage(assetimage),
-                                fit: BoxFit.cover,
-                              ),
+                      GestureDetector(
+                        child:Container(
+                          margin: EdgeInsets.fromLTRB(0,0,size.width*0.06,0),
+                        //       width: 60,
+                        //       height: 75,
+                        //       decoration: BoxDecoration(
+                        //         shape: BoxShape.circle,
+                        //         image: DecorationImage(
+                        //           image: AssetImage(assetimage),
+                        //           fit: BoxFit.cover,
+                        //         ),
+                        //     ),
+                        //   ),
+                          child: CircleAvatar(
+                            radius: 40.0,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(assetimage),
+                              radius: 35,
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder : (context) => Profile(auth: widget.auth, onSignedOut: widget.onSignedOut )));
+                        },
+                      ),      
+
                     ],
                   ),
                 )
@@ -190,6 +198,54 @@ class _NewHomeState extends State<NewHome> {
           ],
         ),
       ]),
+      Scaffold(
+        appBar: AppBar(
+          title: Text('History'),
+          automaticallyImplyLeading: true,
+        ),
+        body: Container(
+          child: Center(child: Text("This is History Page", style: TextStyle(fontSize: 32.0))),
+        ),
+      ),
+    
+      Scaffold(
+        appBar: AppBar(
+          title: Text('Rate Card'),
+          automaticallyImplyLeading: true,
+        ),
+        body: Container(
+          child: Center(child: Text("This is Rate Card Page", style: TextStyle(fontSize: 32.0))),
+        ),
+      ),
+  ];
+    
+    return Scaffold(
+      // Colors.amber[300]
+      backgroundColor: Colors.amber[300],
+      resizeToAvoidBottomPadding: false,
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: kPrimaryLightColor,
+        selectedItemColor: kPrimaryColor,
+        backgroundColor: Colors.white,
+        elevation: 20.0,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'Rate Card',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
 
@@ -226,6 +282,7 @@ class _NewHomeState extends State<NewHome> {
     
   }
 
+  
   // Future<void> script() async {
   //   List name  = ['Abhishek','Sameer','Faisal','Sandeep','Manoj','Gauri','Shruti','Payal','Shivangi','Kamala'];
   //   // List states = ['Maharashtra','Goa'];
@@ -317,16 +374,16 @@ class _NewHomeState extends State<NewHome> {
   //       }); 
   //     }
 
-      // for(int i=6;i<=10;i++){
+  //     for(int i=6;i<=10;i++){
 
-      //   Random random = new Random();
-      //   int randomNumber = random.nextInt(2);
-      //   await FirebaseFirestore.instance
-      //   .collection('helper')
-      //   .doc(name[i-1]+"@gmail.com")
-      //   .set(
-      //   {'name':name[i-1],'email': name[i-1]+"@gmail.com", 'password':'123456','contact no': '7977861078', 'state': states[randomNumber], 'city': cities[randomNumber], 'aadhar':'https://firebasestorage.googleapis.com/v0/b/helper-hiring-backend.appspot.com/o/demo12%40gmail.com%2FIMG-20210224-WA0000.jpg?alt=media&token=b0c9855d-0397-44ae-b17b-a4cd0d8ffe7f'}); 
-      // }
+  //       Random random = new Random();
+  //       int randomNumber = random.nextInt(2);
+  //       await FirebaseFirestore.instance
+  //       .collection('helper')
+  //       .doc(name[i-1]+"@gmail.com")
+  //       .set(
+  //       {'name':name[i-1],'email': name[i-1]+"@gmail.com", 'password':'123456','contact no': '7977861078', 'state': states[randomNumber], 'city': cities[randomNumber], 'aadhar':'https://firebasestorage.googleapis.com/v0/b/helper-hiring-backend.appspot.com/o/demo12%40gmail.com%2FIMG-20210224-WA0000.jpg?alt=media&token=b0c9855d-0397-44ae-b17b-a4cd0d8ffe7f'}); 
+  //     }
     
   // }
 }

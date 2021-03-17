@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
               // Navigator.pop(context);
               // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
               // Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder:(context) => NewHome(auth: widget.auth)));
+              Navigator.push(context, MaterialPageRoute(builder:(context) => NewHome(auth: widget.auth, onSignedOut: widget.onSignedOut)));
             } 
           ),
           FlatButton(

@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -87,13 +88,22 @@ class _BodyState extends State<Body> {
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: kPrimaryColor,
                         onPressed: ()async{
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        prefs.setBool("pref"+ widget.email, true);
-                        fileurl = await uploadFiles(widget.file);
+                        // SharedPreferences prefs = await SharedPreferences.getInstance();
+                        // prefs.setBool("pref"+ widget.email, true);
                         print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
-                        store();
-                        Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        String useruid = await userCreation(context);
+                        print("apna Userid: "+ useruid);
+                        if(useruid != "Error while Registering User!!"){
+                          fileurl = await uploadFiles(widget.file);
+                          store();
+                          Navigator.pop(context);
+                          Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        }
+                        else{
+                          print('OTP verification failed!!');
+
+                        }
+                        
                         },
                         child: Text(
                           "I want a Helper",
@@ -112,8 +122,8 @@ class _BodyState extends State<Body> {
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: kPrimaryLightColor,
                         onPressed: ()async{
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        prefs.setBool("pref"+widget.email, false);
+                        // SharedPreferences prefs = await SharedPreferences.getInstance();
+                        // prefs.setBool("pref"+widget.email, false);
                         fileurl = await uploadFiles(widget.file);
                         print("Helper Store Function Call!!!!!!!!!!!!!!!!!");
                         helperstore();
@@ -137,6 +147,54 @@ class _BodyState extends State<Body> {
         ),
       ),
     );
+  }
+
+  showErrorDialog(BuildContext context,String title, String content) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK", style: TextStyle(color: kPrimaryColor),),
+      onPressed: () {
+        Navigator.pop(context,null);
+        Navigator.pop(context);
+        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future<String> userCreation(BuildContext context) async{
+     try{
+        User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: widget.email, password: widget.password)).user;
+        
+        print("Registered user => " + user.uid);
+        return user.uid;
+      }
+      catch(e){
+        print("Error => $e");
+        if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
+          showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
+        }
+        else{
+          showErrorDialog(context,"Signup Error",e.toString());
+        }
+        return "Error while Registering User!!";
+      }
   }
 
   Future<void> store() async {

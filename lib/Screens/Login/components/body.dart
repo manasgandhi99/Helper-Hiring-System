@@ -29,6 +29,8 @@ class _BodyState extends State<Body> {
   String email = '';
   String password = '';
   bool boolValue = false;
+  String useruid = "";
+  int count=0;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +127,7 @@ class _BodyState extends State<Body> {
                     onPressed: () async{
                       String useruid = await validateAndSubmit();
                       print("apna Userid: "+ useruid);
-                      
+                      // print("count: " + count.toString());
                       if(useruid != "User doesn't Exist!!" && useruid != "Error in Validation!!"){
                         print("andar aaya");
                         // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -137,13 +139,7 @@ class _BodyState extends State<Body> {
                         // if(boolValue){ 
                         Navigator.pop(context);
                         Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-                        // }
-                        // else{
-                        //   Navigator.pop(context);
-                        //   Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-                        // }
                       }
-                      
                     },
                     child: Text(
                       "SIGNIN",
@@ -212,13 +208,18 @@ class _BodyState extends State<Body> {
     }
   }
 
-  Future<String> validateAndSubmit() async{
+   Future<String> validateAndSubmit() async{
     if(validateAndSave()){
-      // final BaseAuth auth = AuthProvider.of(context).auth;
       try{
         String user = await widget.auth.signInWithEmailAndPassword(email, password);
+        
         print("Logged In user => " + user);
         
+        // setState((){
+        //   count=1;
+        //   useruid = user;
+        //   print("set state ka count: " + count.toString());
+        // });
         return user;
       }
       catch(e){
