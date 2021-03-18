@@ -31,6 +31,13 @@ class _BodyState extends State<Body> {
   bool boolValue = false;
   String useruid = "";
   int count=0;
+  bool _passwordVisible;
+
+  @override
+  initState(){
+    _passwordVisible = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,7 @@ class _BodyState extends State<Body> {
             children: <Widget>[
               Text(
                 "LOGIN",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),
               ),
 
               SizedBox(height: size.height * 0.03),
@@ -98,7 +105,7 @@ class _BodyState extends State<Body> {
                   }
                   return null;
                 },
-                obscureText: true,
+                obscureText: !_passwordVisible,
                 cursorColor: kPrimaryColor,
                 decoration: InputDecoration(
                   hintText: "Password",
@@ -106,9 +113,20 @@ class _BodyState extends State<Body> {
                     Icons.lock,
                     color: kPrimaryColor,
                   ),
-                  suffixIcon: Icon(
-                    Icons.visibility,
-                    color: kPrimaryColor,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                    // Based on passwordVisible state choose the icon
+                      _passwordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                      color: kPrimaryColor,
+                    ),
+                    onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                      setState(() {
+                          _passwordVisible = !_passwordVisible;
+                      });
+                    },
                   ),
                   border: InputBorder.none,
                 ),

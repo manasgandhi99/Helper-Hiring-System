@@ -27,6 +27,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // import 'package:flutter_svg/svg.dart';
 FlutterOtp otp = FlutterOtp();
+
 class Body extends StatefulWidget {
   final BaseAuth auth;
   Body({this.auth});
@@ -36,9 +37,11 @@ class Body extends StatefulWidget {
 
 class _Bodystate extends State<Body> {
   TextEditingController _c;
+  bool _passwordVisible;
   @override
   initState(){
     _c = new TextEditingController();
+    _passwordVisible = false;
     super.initState();
   }
 
@@ -78,8 +81,8 @@ class _Bodystate extends State<Body> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "SIGNUP",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "REGISTER",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),
               ),
 
               SizedBox(height: size.height * 0.03),
@@ -254,7 +257,7 @@ class _Bodystate extends State<Body> {
                   }
                   return null;
                 },
-                obscureText: true,
+                obscureText: !_passwordVisible,
                 cursorColor: kPrimaryColor,
                 decoration: InputDecoration(
                   hintText: "Password",
@@ -262,15 +265,28 @@ class _Bodystate extends State<Body> {
                     Icons.lock,
                     color: kPrimaryColor,
                   ),
-                  suffixIcon: Icon(
-                    Icons.visibility,
-                    color: kPrimaryColor,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                    // Based on passwordVisible state choose the icon
+                      _passwordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                      color: kPrimaryColor,
+                    ),
+                    onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                      setState(() {
+                          _passwordVisible = !_passwordVisible;
+                      });
+                    },
                   ),
                   border: InputBorder.none,
+                  ),
+                  onSaved: (value) => _password = value,
                 ),
-                onSaved: (value) => _password = value,
+                
               ),
-              ),
+              
               
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
@@ -342,7 +358,7 @@ class _Bodystate extends State<Body> {
                 },
               ),
 
-              SizedBox(height: size.height * 0.03),
+              SizedBox(height: size.height * 0.01),
 
             ],
           ),
