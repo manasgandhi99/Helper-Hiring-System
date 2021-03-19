@@ -1,4 +1,5 @@
 import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
+import 'package:Helper_Hiring_System/Screens/profile_creation.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -124,11 +125,19 @@ class _BodyState extends State<Body> {
                         onPressed: ()async{
                         // SharedPreferences prefs = await SharedPreferences.getInstance();
                         // prefs.setBool("pref"+widget.email, false);
-                        fileurl = await uploadFiles(widget.file);
-                        print("Helper Store Function Call!!!!!!!!!!!!!!!!!");
-                        helperstore();
-                        Navigator.pop(context);
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                          // fileurl = await uploadFiles(widget.file);
+                          print("Helper Store Function Call!!!!!!!!!!!!!!!!!");
+                          String useruid = await userCreation(context);
+                          print("apna Userid: "+ useruid);
+                          if(useruid != "Error while Registering User!!"){
+                            fileurl = await uploadFiles(widget.file);
+                            helperstore();
+                            Navigator.pop(context);
+                            Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+                          }
+                          else{
+                            print('OTP verification failed!!');
+                          }
                         },
                         child: Text(
                           "I want a Job",

@@ -229,6 +229,7 @@ class _BodyState extends State<Body> {
    Future<String> validateAndSubmit() async{
     if(validateAndSave()){
       try{
+        print("Email: ");
         String user = await widget.auth.signInWithEmailAndPassword(email, password);
         
         print("Logged In user => " + user);
