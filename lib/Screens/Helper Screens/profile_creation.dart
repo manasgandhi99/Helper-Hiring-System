@@ -1,8 +1,5 @@
-// import 'dart:html';
-// import 'dart:ui';
 import 'dart:math';
 import 'package:Helper_Hiring_System/Screens/Login/components/background.dart';
-import 'package:Helper_Hiring_System/Screens/history.dart';
 import 'package:Helper_Hiring_System/components/already_have_an_account_acheck.dart';
 import 'package:Helper_Hiring_System/components/text_field_container.dart';
 import 'package:Helper_Hiring_System/root_page.dart';
@@ -13,15 +10,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../auth.dart';
-import '../constants.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'dart:io';
+import '../../auth.dart';
+import '../../constants.dart';
 
 
 class ProfileCreation extends StatefulWidget {
   final BaseAuth auth;
-  // final VoidCallback onSignedOut; 
   ProfileCreation({this.auth});
 
   @override
@@ -52,7 +48,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
   String _city = '';
   String _state = '';
   String gender;
-  String _phonenumber;
 
   var yoelist = new List<String>.generate(50, (i) => (i + 1).toString());
   int minNumber = 1000;
@@ -68,6 +63,7 @@ class _ProfileCreationState extends State<ProfileCreation> {
   TextEditingController _c;
   TextEditingController _namecontroller; 
   TextEditingController _contactnocontroller; 
+  
   @override
   initState(){
     _c = new TextEditingController();
@@ -80,14 +76,12 @@ class _ProfileCreationState extends State<ProfileCreation> {
     await autofill();
   }
   
-
   @override
   void dispose() {
     _namecontroller.dispose();
     _contactnocontroller.dispose();
     super.dispose();
   }
-  
   
   final _formKey = GlobalKey<FormState>(); 
 
@@ -114,20 +108,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Profile Creation'),
-      //   // actions: <Widget>[
-      //   //   FlatButton(
-      //   //     child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
-      //   //     onPressed: () {
-      //   //       _signOut(context);
-      //   //       // Navigator.pop(context);
-      //   //       // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
-      //   //     },
-      //   //   )
-      //   // ],
-      //   automaticallyImplyLeading: false,
-      // ),
       body: Background(
       child: SingleChildScrollView(
         child: Center(
@@ -487,33 +467,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
                   ),
                 ),
 
-                // TextFieldContainer(
-                //   child:TextFormField(
-                //   validator: (value){
-                //     if(value.isEmpty){
-                //       return "Please enter some value";
-                //     }
-                //     else{
-                //       if(value.length > 2){
-                //         return "Maximum length is 2 characters";
-                //       }
-                //     }
-                //     return null;
-                //   },
-                  
-                //   cursorColor: kPrimaryColor,
-                //   decoration: InputDecoration(
-                //     hintText: "Years Of Experience",
-                //     icon: Icon(
-                //       Icons.assignment_ind,
-                //       color: kPrimaryColor,
-                //     ),
-                //     border: InputBorder.none,
-                //   ),
-                //   onSaved: (value) => _yoe = value,
-                // ),
-                // ),
-
                 TextFieldContainer(
                   child: Container(
                     child:Row(
@@ -660,65 +613,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
                 ),
                 ),
                   
-                // Container(
-                //   margin: EdgeInsets.symmetric(vertical: 10),
-                //   width: size.width * 0.50,
-                //   child: ClipRRect(
-                //     borderRadius: BorderRadius.circular(29),
-                //     child: FlatButton(
-                //       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                //       color: kPrimaryLightColor,
-                //       onPressed: (){},
-                //       child: Row(
-                //         children: [
-                //           Padding(
-                //             padding: EdgeInsets.zero,
-                //             child: Icon(Icons.file_upload, color: kPrimaryColor),
-                //           ),
-                //           SizedBox(width:size.width*0.035),
-                //           Text(
-                //           "Upload Aadhar",style: TextStyle(color: Colors.grey[600]),
-                //           ),
-                //         ],
-                //       )
-                //     ),
-                //   ),
-                // ),
-
-
-
-                // Container(
-                //     child:DropdownButton<String>(
-                //     focusColor:Colors.white,
-                //     value: _chosenValue,
-                //     //elevation: 5,
-                //     style: TextStyle(color: Colors.white),
-                //     iconEnabledColor:Colors.black,
-                //     items: <String>[
-                //       'Male',
-                //       'Female',
-                //       'Others',
-                //     ].map<DropdownMenuItem<String>>((String value) {
-                //       return DropdownMenuItem<String>(
-                //         value: value,
-                //         child: Text(value,style:TextStyle(color:Colors.black),),
-                //       );
-                //     }).toList(),
-                //     hint:Text(
-                //       "Please choose a gender",
-                //       style: TextStyle(
-                //           color: Colors.black,
-                //           fontSize: 14,
-                //           fontWeight: FontWeight.w500),
-                //     ),
-                //     onChanged: (String value) {
-                //       setState(() {
-                //         _chosenValue = value;
-                //       });
-                //     },
-                //   ),
-                // ),
-
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 10),
                   width: size.width * 0.6,
@@ -733,7 +627,7 @@ class _ProfileCreationState extends State<ProfileCreation> {
                         // phoneNo();
                         String useruid = await validateAndSubmit(context);
                         print("Profile creation wala Userid: "+ useruid);
-                        if(useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Upload Aadhar field empty!!"){
+                        if(useruid != "Error in Validation!!" && useruid != "OTP Verification failed!!" && useruid != "Photo field empty!!"){
                           // Navigator.pop(context);
                           showdialog(context);
                           }
@@ -751,19 +645,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
 
                 SizedBox(height: size.height * 0.03),
 
-                // AlreadyHaveAnAccountCheck(
-                //   login: false,
-                //   press: () {
-                //     // Navigator.push(
-                //     //   context,
-                //     //   MaterialPageRoute(
-                //     //     builder: (context) {
-                //     //       return LoginScreen();
-                //     //     },
-                //     //   ),
-                //     // );
-                //   },
-                // ),
               ],
             ),
           ),
@@ -772,16 +653,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
     )
     );
   }
-
-  // void _signOut(BuildContext context) async {
-  //   try {
-  //     // final BaseAuth auth = AuthProvider.of(context).auth;
-  //     await widget.auth.signOut();
-  //     widget.onSignedOut();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   bool validateAndSave(){
     final isValid = _formKey.currentState.validate(); 
@@ -929,22 +800,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
         print("Error: " + e);
     }
   }
-  
-  // Future<void> phoneNo() async{
-  //   try{
-  //       final user = await widget.auth.currentUser();
-  //       print(user); 
-  //       FirebaseFirestore.instance.collection('helper').where('email', isEqualTo: user)
-  //       .snapshots().listen((data)  {
-  //         _phonenumber = data.docs[0]['contact no'];
-  //         print('Phone Number: $_phonenumber');
-  //       }
-  //       );
-  //     }
-  //     catch(e){
-  //       print("Error: " + e);
-  //     }
-  // }
 
   Future<String> validateAndSubmit(BuildContext context) async{
     if(validateAndSave()){
@@ -952,44 +807,34 @@ class _ProfileCreationState extends State<ProfileCreation> {
       // bool filepath = await file.exists();
       // print("File ka string value is: "+ (filepath.toString()));
       // if else for each dropdown
-      
-      print("Val and sub k andar ka phone no.: "+ _autocontactno);
-      print("Val and sub k andar ka contact no.: "+ _contactno);
-      if(_autocontactno == _contactno){
-        
-        getData();        
-        return "Success";
+      if(imageUrl == "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png"){
+        showErrorDialog(context, "Upload Error", "Please upload your Profile Photo");
+        return "Photo field empty!!";
       }
+
       else{
-        
-        Random random = new Random();
-        randomNumber = random.nextInt(maxNumber)+minNumber;
-        otp.sendOtp(_contactno, "Your OTP is: "+ randomNumber.toString(), minNumber, maxNumber, countryCode);
-        print("OTP Sent");
-        String outputshoutput = await _showMyDialog(context);
-        print("Outputshoutput: "+ outputshoutput);
-        if(outputshoutput == "Success"){
-          getData();
-          // try{
-          //   User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)).user;
-          //   print("Registered user => " + user.uid);
-          //   return user.uid;
-          // }
-          // catch(e){
-          //   print("Error => $e");
-          //   if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
-          //     showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
-          //   }
-          //   else{
-          //     showErrorDialog(context,"Signup Error",e.toString());
-          //   }
-          //   return "Error while Registering User!!";
-          // }
+        print("Val and sub k andar ka phone no.: "+ _autocontactno);
+        print("Val and sub k andar ka contact no.: "+ _contactno);
+        if(_autocontactno == _contactno){
+          getData();        
           return "Success";
         }
         else{
-          showErrorDialog(context,"OTP Error","Please enter a valid OTP.");
-          return "OTP Verification failed!!";
+          
+          Random random = new Random();
+          randomNumber = random.nextInt(maxNumber)+minNumber;
+          otp.sendOtp(_contactno, "Your OTP is: "+ randomNumber.toString(), minNumber, maxNumber, countryCode);
+          print("OTP Sent");
+          String outputshoutput = await _showMyDialog(context);
+          print("Outputshoutput: "+ outputshoutput);
+          if(outputshoutput == "Success"){
+            getData();
+            return "Success";
+          }
+          else{
+            showErrorDialog(context,"OTP Error","Please enter a valid OTP.");
+            return "OTP Verification failed!!";
+          }
         }
       }
     }
@@ -1004,15 +849,14 @@ class _ProfileCreationState extends State<ProfileCreation> {
     print(user);
     
     FirebaseFirestore.instance.collection('helper').where('email', isEqualTo: user)
-    .snapshots().listen((data)  {
-      _city = data.docs[0]['city'];
-      _state = data.docs[0]['state'];
-      _password = data.docs[0]['password'];
-      print('City: $_city');
-      print('State: $_state');
-      setValue();
-    }
-    
+      .snapshots().listen((data)  {
+        _city = data.docs[0]['city'];
+        _state = data.docs[0]['state'];
+        _password = data.docs[0]['password'];
+        print('City: $_city');
+        print('State: $_state');
+        setValue();
+      }
     );
   }
   
@@ -1051,23 +895,6 @@ class _ProfileCreationState extends State<ProfileCreation> {
           fileurl = await uploadFiles(file);
       }
       setState((){
-        
-        // //   final snackBar = SnackBar(
-        // //     content: Text('File Uploaded!'),
-        // //     action: SnackBarAction(
-        // //       label: 'OK',
-        // //       onPressed: () {},
-        // //     ),
-        // //   );
-
-        // //   // Find the Scaffold in the widget tree and use
-        // //   // it to show a SnackBar.
-        // //  Scaffold.of(context).showSnackBar(snackBar);
-        //   fileurl = await uploadFiles(file);
-          
-        // } else {
-        //   // User canceled the picker
-        // }
       });
   }
 
@@ -1077,12 +904,8 @@ class _ProfileCreationState extends State<ProfileCreation> {
     print(user);
     String imageRef = user + '/' + _image.path.split('/').last;
     print(imageRef);
-    // await FirebaseStorage.instance.ref(imageRef).putFile(_image);
-
     imageUrl = await (await FirebaseStorage.instance.ref(imageRef).putFile(_image)).ref.getDownloadURL();
     print(imageUrl);
     return imageUrl;
   }
-
-  
 }

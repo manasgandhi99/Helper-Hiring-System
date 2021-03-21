@@ -1,6 +1,6 @@
 import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
-import '../auth.dart';
+import '../../auth.dart';
 import 'new_home.dart';
 
 class Home extends StatefulWidget {

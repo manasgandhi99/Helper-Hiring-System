@@ -1,5 +1,4 @@
 import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
-import 'package:Helper_Hiring_System/Screens/profile_creation.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -16,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import '../../../root_page.dart';
+import 'package:Helper_Hiring_System/Screens/Helper Screens/profile_creation.dart';
 
 class Body extends StatefulWidget {
   
@@ -213,6 +213,14 @@ class _BodyState extends State<Body> {
         .doc(widget.email)
         .set(
         {'name': widget.name,'email': widget.email, 'role':'employer','password':widget.password,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'aadhar':fileurl});
+
+      await FirebaseFirestore.instance
+        .collection('employer')
+        .doc(widget.email)
+        .collection('profile')
+        .doc(widget.email)
+        .set(
+        {'name': widget.name,'email': widget.email,'contact no': widget.contactno, 'state':widget.state, 'city':widget.city, 'photo': "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png" });
     }
     catch(e){
       print("Error: " + e);

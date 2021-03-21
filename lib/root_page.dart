@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Screens/helper_home.dart';
-import 'Screens/home.dart';
+import 'Screens/Employer Screens/home.dart';
+import 'Screens/Helper Screens/helper_home.dart';
 
 class RootPage extends StatefulWidget {
   final BaseAuth auth;

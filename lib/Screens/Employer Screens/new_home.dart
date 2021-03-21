@@ -1,13 +1,13 @@
-import 'package:Helper_Hiring_System/Screens/result.dart';
+
+import 'package:Helper_Hiring_System/Widgets/customcard.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/customcard.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../auth.dart';
 import 'dart:math';
+import '../../auth.dart';
 import 'profile.dart';
 // import 'dart:io';
 // import '../constants.dart';
@@ -32,11 +32,33 @@ class _NewHomeState extends State<NewHome> {
   String _city;
   String _state;
   int _selectedIndex = 0;
+  String imageUrl = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
   // var data = informationList;
-  final String assetimage = 'assets/images/user1.png';
-
   
+  @override
+  void initState() { 
+    super.initState();
+    autofill();
+  }
 
+  Future<void> autofill() async{
+    try{
+        final user = await widget.auth.currentUser();
+        print(user); 
+        FirebaseFirestore.instance.collection('employer').doc(user).collection('profile').doc(user)
+        .snapshots().listen((data)  {
+          setState(() {
+            imageUrl = data.data()['photo'];
+
+            print('Image ka url mila: $imageUrl');
+          });
+        }
+      );
+    }
+      catch(e){
+        print("Error: " + e);
+    }
+  }
   
   void _onItemTapped(int index) {
     setState(() {
@@ -88,13 +110,13 @@ class _NewHomeState extends State<NewHome> {
                             radius: 40.0,
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
-                              backgroundImage: AssetImage(assetimage),
+                              backgroundImage: NetworkImage(imageUrl),
                               radius: 35,
                             ),
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder : (context) => Profile(auth: widget.auth, onSignedOut: widget.onSignedOut )));
+                          Navigator.push(context, MaterialPageRoute(builder : (context) => Profile(auth: widget.auth, )));
                         },
                       ),      
 

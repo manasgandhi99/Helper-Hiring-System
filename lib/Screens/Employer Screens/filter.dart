@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
+
 
 class Filter extends StatefulWidget {
   Filter({Key key}) : super(key: key);

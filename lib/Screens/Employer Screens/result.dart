@@ -1,9 +1,10 @@
-import 'package:Helper_Hiring_System/Screens/filter.dart';
-import 'package:Helper_Hiring_System/Screens/indetail.dart';
+
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter/material.dart';
-import '../auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../auth.dart';
+import 'filter.dart';
+import 'package:Helper_Hiring_System/Screens/Employer Screens/indetail.dart';
 
 class Result extends StatefulWidget {
   final BaseAuth auth;
