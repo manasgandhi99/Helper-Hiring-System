@@ -74,7 +74,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                 // // color: Colors.blue[100],
                 // padding: EdgeInsets.fromLTRB(size.width*0.03,size.width*0.02,size.width*0.03,size.width*0.02),
                 // decoration: BoxDecoration(
-                //   color: kPrimaryLightColor,
+                //   color: kPrimaryLightColor,0
                   
                 //   border: Border.all(
                 //     color: Colors.black,
@@ -272,6 +272,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
 
                   decoration: InputDecoration(
                     labelText: 'Duration (Per day)',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -285,6 +286,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Expected Salary',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -298,6 +300,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Religion',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -311,6 +314,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Marital Status',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -324,6 +328,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Language',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -337,6 +342,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Age',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -350,6 +356,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Gender',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),
@@ -363,6 +370,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     labelText: 'Years Of Experience',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     
                   ),

@@ -18,7 +18,8 @@ import '../../constants.dart';
 
 class Profile extends StatefulWidget {
   final BaseAuth auth;
-  Profile({this.auth});
+  final VoidCallback onSignedOut; 
+  Profile({this.auth, this.onSignedOut});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -80,6 +81,17 @@ class _ProfileState extends State<Profile> {
     _statecontroller.dispose();
     super.dispose();
   }
+
+  void _signOut(BuildContext context) async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } 
+    catch (e) {
+      print("Error in Signout!!");
+      print(e);
+    }
+  }
   
   final _formKey = GlobalKey<FormState>(); 
 
@@ -91,9 +103,26 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         title: Text(
                 "Profile",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                style: TextStyle(fontSize: 20.0),
                 ),
         automaticallyImplyLeading: true,
+         actions: [
+             FlatButton(
+                  onPressed: () => {
+                    Navigator.pop(context),
+                    // Navigator.popUntil(context, ModalRoute.withName('/welcome')),
+                    _signOut(context),
+                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> Filter())),
+                  },
+                  padding: EdgeInsets.only(top: size.height*0.006),
+                  child: Column(
+                    children: <Widget>[
+                      Icon(Icons.logout,color: Colors.white,),
+                      Text("Logout",style: TextStyle(color: Colors.white,),)
+                    ],
+                  ),
+                ),
+          ],
         // backgroundColor: Colors.white,
       ),
       
@@ -106,9 +135,6 @@ class _ProfileState extends State<Profile> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // SizedBox(height: size.height * 0.03), 
-
-                
-
                 SizedBox(height: size.height * 0.04), 
 
                 Stack(

@@ -102,7 +102,6 @@ class _BodyState extends State<Body> {
                         }
                         else{
                           print('OTP verification failed!!');
-
                         }
                         
                         },

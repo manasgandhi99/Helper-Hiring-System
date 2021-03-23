@@ -32,8 +32,8 @@ class CustomCard extends StatelessWidget {
                 BoxShadow(
                   color: Colors.grey[100],
                   spreadRadius: 10,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
+                  blurRadius: 9,
+                  offset: Offset(0, 6),
                 )
               ],
               color: Colors.white,
@@ -42,19 +42,26 @@ class CustomCard extends StatelessWidget {
               ),
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
-                  padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Center(
                   child: Image.asset(displayImage,  height: MediaQuery.of(context).size.height / 10,width: MediaQuery.of(context).size.width / 5, )),
+                ),
               Padding(
-                padding: EdgeInsets.fromLTRB(12, 2, 0, 0),
-                child: Text(header,
+                padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+                child: Center(
+                  child: Text(
+                    header,
                     style: GoogleFonts.roboto(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                    )
+                  ),
+                ), 
               )
             ],
           )),

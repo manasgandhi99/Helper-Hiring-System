@@ -306,7 +306,7 @@ class _HelperProfileState extends State<HelperProfile> {
                   cursorColor: kPrimaryColor,
                   decoration: InputDecoration(
                     icon: Icon(
-                      Icons.location_on_sharp,
+                      Icons.location_city,
                       color: kPrimaryColor,
                     ),
                     hintText: "City",
@@ -333,7 +333,7 @@ class _HelperProfileState extends State<HelperProfile> {
                   cursorColor: kPrimaryColor,
                   decoration: InputDecoration(
                     icon: Icon(
-                      Icons.location_on_sharp,
+                      Icons.my_location_sharp,
                       color: kPrimaryColor,
                     ),
                     hintText: "State",

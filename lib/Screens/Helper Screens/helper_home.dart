@@ -34,49 +34,52 @@ class _HelperHomeState extends State<HelperHome> {
       HelperProfile(auth: widget.auth,),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
+    return new WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
 
-        title: Text('Helper Home'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
-            onPressed: () {
-              _signOut(context);
-              // Navigator.pop(context);
-              // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
-            },
-          )
-        ],
-        automaticallyImplyLeading: false,
+          title: Text('Helper Home'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
+              onPressed: () {
+                _signOut(context);
+                // Navigator.pop(context);
+                // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
+              },
+            )
+          ],
+          automaticallyImplyLeading: false,
+        ),
+
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: kPrimaryLightColor,
+          selectedItemColor: kPrimaryColor,
+          backgroundColor: Colors.white,
+          elevation: 20.0,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book),
+              label: 'Rate Card',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_pin_rounded),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
+
+        body: _widgetOptions.elementAt(_selectedIndex),
+        // Container(
+        //   child: Center(child: Text('This is Helper Side', style: TextStyle(fontSize: 32.0))),
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: kPrimaryLightColor,
-        selectedItemColor: kPrimaryColor,
-        backgroundColor: Colors.white,
-        elevation: 20.0,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Rate Card',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_pin_rounded),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-
-      body: _widgetOptions.elementAt(_selectedIndex),
-      // Container(
-      //   child: Center(child: Text('This is Helper Side', style: TextStyle(fontSize: 32.0))),
     );
   }
 

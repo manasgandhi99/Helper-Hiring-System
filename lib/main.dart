@@ -3,6 +3,7 @@ import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Screens/Welcome/welcome_screen.dart';
 import 'auth.dart';
 
 void main() async{
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         home: RootPage(auth: Auth()),
+        routes: {
+          "/welcome": (_) => new WelcomeScreen(),
+        },
       );
     
   }

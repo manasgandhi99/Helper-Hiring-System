@@ -1,4 +1,5 @@
 
+import 'package:Helper_Hiring_System/Screens/Employer%20Screens/ratecard.dart';
 import 'package:Helper_Hiring_System/Widgets/customcard.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -66,6 +67,9 @@ class _NewHomeState extends State<NewHome> {
     });
   }
 
+  
+  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -88,8 +92,8 @@ class _NewHomeState extends State<NewHome> {
                           child: Text(
                             'Hire Helper',
                             style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: 32,
+                                color: Colors.black,
+                                fontSize: 31,
                                 fontWeight: FontWeight.bold),
                           )),
 
@@ -116,7 +120,7 @@ class _NewHomeState extends State<NewHome> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder : (context) => Profile(auth: widget.auth, )));
+                          Navigator.push(context, MaterialPageRoute(builder : (context) => Profile(auth: widget.auth, onSignedOut: widget.onSignedOut,)));
                         },
                       ),      
 
@@ -158,13 +162,13 @@ class _NewHomeState extends State<NewHome> {
                         
                         CustomCard(      
                           header: "House Help",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/househelp.png",
                           auth: widget.auth,
                           category :'house_help'
                         ),
                         CustomCard(      
                           header: "Cook",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/cook.png",
                           auth: widget.auth,
                           category :'cook'
                         ),
@@ -180,13 +184,13 @@ class _NewHomeState extends State<NewHome> {
                         //     "Bathroom", "1 light", 'assets/images/bathtube.png'),
                         CustomCard(      
                           header: "Elderly Care",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/elderlycare.png",
                           auth: widget.auth,
                           category :'elderly_care'
                         ),
                         CustomCard(      
                           header: "BabySitting",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/babysitting.png",
                           auth: widget.auth,
                           category :'babysitting'
                         ),
@@ -201,13 +205,13 @@ class _NewHomeState extends State<NewHome> {
                         // CustomCard("Balcony", "2 lights", 'assets/images/balcony.png'),
                         CustomCard(      
                           header: "Office Help",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/officehelp1.jpg",
                           auth: widget.auth,
                           category :'office_help'
                         ),
                         CustomCard(      
                           header: "Patient Care",
-                          displayImage: "assets/images/maid.jpg",
+                          displayImage: "assets/images/patientcare.png",
                           auth: widget.auth,
                           category :'patient_care'
                         ),
@@ -230,18 +234,21 @@ class _NewHomeState extends State<NewHome> {
         ),
       ),
     
-      Scaffold(
-        appBar: AppBar(
-          title: Text('Rate Card'),
-          automaticallyImplyLeading: true,
-        ),
-        body: Container(
-          child: Center(child: Text("This is Rate Card Page", style: TextStyle(fontSize: 32.0))),
-        ),
-      ),
+      // Scaffold(
+      //   appBar: AppBar(
+      //     title: Text('Rate Card'),
+      //     automaticallyImplyLeading: true,
+      //   ),
+      //   body: Container(
+      //     child: Center(child: Text("This is Rate Card Page", style: TextStyle(fontSize: 32.0))),
+      //   ),
+      // ),
+      RateCard(),
   ];
     
-    return Scaffold(
+    return new WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
       // Colors.amber[300]
       backgroundColor: Colors.amber[300],
       resizeToAvoidBottomPadding: false,
@@ -268,7 +275,9 @@ class _NewHomeState extends State<NewHome> {
         onTap: _onItemTapped,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
-    );
+    ),
+  ); 
+
   }
 
   Future<void> getData() async {

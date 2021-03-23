@@ -1,10 +1,12 @@
 import 'package:Helper_Hiring_System/Screens/Welcome/welcome_screen.dart';
+import 'package:Helper_Hiring_System/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Screens/Employer Screens/home.dart';
+import 'Screens/Employer Screens/new_home.dart';
 import 'Screens/Helper Screens/helper_home.dart';
 
 class RootPage extends StatefulWidget {
@@ -112,6 +114,11 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.notSignedIn:
+        // Navigator.push(context, MaterialPageRoute(builder: (context)=> WelcomeScreen(
+        //   auth: widget.auth,
+        //   onSignedIn: _signedIn,
+        // )));
+        print('Welcome Screen');
         return WelcomeScreen(
           auth: widget.auth,
           onSignedIn: _signedIn,
@@ -121,22 +128,20 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.signedIn:
         if(role==""){
           return Scaffold(
-            body: Center(child:CircularProgressIndicator()),
+            body: Center(child:CircularProgressIndicator(backgroundColor: kPrimaryColor,)),
           );
         }
 
-        // else if(role == "no role"){
-        //   return
-        // }
-
         else if(role == "employer"){
-          return Home(
+          print('NewHome Screen');
+          return NewHome(
             auth: widget.auth,
             onSignedOut: _signedOut,
           );
         }
 
         else {
+          print('Helper Home Screen');
           return HelperHome(
             auth: widget.auth,
             onSignedOut: _signedOut,
