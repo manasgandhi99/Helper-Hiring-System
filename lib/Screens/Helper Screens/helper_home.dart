@@ -2,6 +2,7 @@ import 'package:Helper_Hiring_System/Screens/Helper%20Screens/ratecard.dart';
 import 'package:Helper_Hiring_System/Screens/Helper%20Screens/helper_profile.dart';
 import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../auth.dart';
 import '../../constants.dart';
 
@@ -31,27 +32,13 @@ class _HelperHomeState extends State<HelperHome> {
     List<Widget> _widgetOptions = [
       home(),
       RateCard(),
-      HelperProfile(auth: widget.auth,),
+      HelperProfile(auth: widget.auth, onSignedOut: widget.onSignedOut),
     ];
 
     return new WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-
-          title: Text('Helper Home'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Logout', style: TextStyle(fontSize: 17.0, color: Colors.white)),
-              onPressed: () {
-                _signOut(context);
-                // Navigator.pop(context);
-                // Navigator.push(context, MaterialPageRoute(builder:(context) => RootPage(auth: widget.auth)));
-              },
-            )
-          ],
-          automaticallyImplyLeading: false,
-        ),
+        
 
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: kPrimaryLightColor,
@@ -85,21 +72,34 @@ class _HelperHomeState extends State<HelperHome> {
 
   Widget home(){
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "HOME",
+          style: GoogleFonts.montserrat(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: kPrimaryColor
+          )
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+      ),
       body:  Center(
         child: Container(
-          child: Text('This is my Home Page', style: TextStyle(fontSize: 28)),
+          child: Text('Home Page', style: TextStyle(fontSize: 28)),
         )
       ),
     );
   }
   
-  void _signOut(BuildContext context) async {
-    try {
-      // final BaseAuth auth = AuthProvider.of(context).auth;
-      await widget.auth.signOut();
-      widget.onSignedOut();
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void _signOut(BuildContext context) async {
+  //   try {
+  //     // final BaseAuth auth = AuthProvider.of(context).auth;
+  //     await widget.auth.signOut();
+  //     widget.onSignedOut();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 }

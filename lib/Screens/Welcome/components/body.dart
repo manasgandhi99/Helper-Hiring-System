@@ -9,6 +9,7 @@ import 'package:Helper_Hiring_System/components/rounded_button.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Helper_Hiring_System/root_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Body extends StatelessWidget {
   final BaseAuth auth;
@@ -26,7 +27,11 @@ class Body extends StatelessWidget {
           children: <Widget>[
             Text(
               "WELCOME TO HIREHELPER",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: GoogleFonts.montserrat(
+              fontSize: 21.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black
+              )
             ),
             SizedBox(height: size.height * 0.05),
             Image.asset(

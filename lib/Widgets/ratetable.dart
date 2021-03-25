@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 
 class RateTable extends StatelessWidget {
   final String name;
+  final String displayImage;
   final String value1;
   final String value2;
   final String value3;
   final String value4;
-  RateTable({Key k, this.name, this.value1, this.value2, this.value3, this.value4}):super(key: k);
+  RateTable({Key k, this.name, this.displayImage, this.value1, this.value2, this.value3, this.value4}):super(key: k);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(  
-      margin: EdgeInsets.only(left: 12.0, right: 12.0, top: 20.0, bottom: 10.0),
+      margin: EdgeInsets.only(left: 12.0, right: 12.0, top: 15.0, bottom: 8.0),
       // color: Color(0x00000000),
       decoration: BoxDecoration(
             color: Colors.white,
@@ -22,9 +23,9 @@ class RateTable extends StatelessWidget {
       child: FlipCard(
         direction: FlipDirection.HORIZONTAL,
         speed: 1000,
-        onFlipDone: (status) {
-          print(status);
-        },
+        // onFlipDone: (status) {
+        //   print(status);
+        // },
         front: Container(
           height: size.height * 0.23,
           width: size.width * 0.4,
@@ -36,11 +37,11 @@ class RateTable extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                height: size.height * 0.23 * 0.65,
-                width: size.width * 0.4 * 0.8,
+                height: size.height * 0.23 * 0.55,
+                width: size.width * 0.4 * 0.65,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png"),
+                    image: AssetImage(displayImage),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -49,8 +50,7 @@ class RateTable extends StatelessWidget {
 
               SizedBox(height: size.height*0.02),
               
-              Text(name,
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.0)),
+              Text(name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.0)),
             ],
           ),
         ),
@@ -68,7 +68,14 @@ class RateTable extends StatelessWidget {
               // Text('Back', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.0)),
               // Text('Click here to flip front',
               //     style: Theme.of(context).textTheme.body1),
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.01),
+
+              Center(
+                child: Text(name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.0)),
+              ),
+
+              SizedBox(height: size.height * 0.013),
+
               Table(
                 defaultColumnWidth: FixedColumnWidth(80.0),
                 // defaultVerticalAlignment: TableCellVerticalAlignment.top,  

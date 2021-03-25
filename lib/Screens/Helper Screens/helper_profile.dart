@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_otp/flutter_otp.dart';
@@ -18,7 +19,8 @@ import '../../constants.dart';
 
 class HelperProfile extends StatefulWidget {
   final BaseAuth auth;
-  HelperProfile({this.auth});
+  final VoidCallback onSignedOut;
+  HelperProfile({this.auth, this.onSignedOut});
 
   @override
   _HelperProfileState createState() => _HelperProfileState();
@@ -105,6 +107,17 @@ class _HelperProfileState extends State<HelperProfile> {
     _languagescontroller.dispose();
     super.dispose();
   }
+
+  void _signOut(BuildContext context) async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } 
+    catch (e) {
+      print("Error in Signout!!");
+      print(e);
+    }
+  }
   
   final _formKey = GlobalKey<FormState>(); 
 
@@ -131,9 +144,47 @@ class _HelperProfileState extends State<HelperProfile> {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("Profile"),
-      // ),
+      // extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          "PROFILE",
+          style: GoogleFonts.montserrat(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: kPrimaryColor
+          )
+        ),
+        // Text(
+        // "Profile",
+        // style: TextStyle(fontSize: 20.0,),
+        // ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: [
+            FlatButton(
+                onPressed: () => {
+                  // Navigator.pop(context),
+                  _signOut(context),
+                },
+                padding: EdgeInsets.only(top: size.height*0.006),
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.logout,color: kPrimaryColor,),
+                    Text(
+                      "Logout",
+                      style: GoogleFonts.montserrat(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor
+                      )
+                    ),
+                  ],
+                ),
+              ),
+        ],
+        // backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Form(
@@ -142,14 +193,14 @@ class _HelperProfileState extends State<HelperProfile> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: size.height * 0.03), 
+                // SizedBox(height: size.height * 0.03), 
 
-                Text(
-                "PROFILE",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                ),
+                // Text(
+                // "PROFILE",
+                // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                // ),
 
-                SizedBox(height: size.height * 0.03), 
+                // SizedBox(height: size.height * 0.03), 
 
                 Stack(
                   children: <Widget>[
@@ -663,7 +714,7 @@ class _HelperProfileState extends State<HelperProfile> {
                   
                   cursorColor: kPrimaryColor,
                   decoration: InputDecoration(
-                    hintText: "Expected Salary",
+                    hintText: "Expected Salary (Per Day)",
                     icon: Icon(
                       Icons.money,
                       color: kPrimaryColor,
@@ -810,13 +861,11 @@ class _HelperProfileState extends State<HelperProfile> {
       title: 'Congratulations',
       desc:'Your Profile is updated Successfully!',
       btnOkOnPress: () {
-        Navigator.pop(context);
-        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth,)));
+        // Navigator.pop(context);
+        // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth,)));
       },
       
-      // btnCancelOnPress: () {},
       btnOkIcon: Icons.check_circle,
-      // btnCancelIcon: Icons.cancel,
       dismissOnTouchOutside: false,
       dismissOnBackKeyPress: false,
       onDissmissCallback: () {
@@ -851,28 +900,6 @@ class _HelperProfileState extends State<HelperProfile> {
       },
     );
   }
-
-  // Future<void> autofill() async{
-  //   try{
-  //       final user = await widget.auth.currentUser();
-  //       print(user); 
-  //       FirebaseFirestore.instance.collection('helper').where('email', isEqualTo: user)
-  //       .snapshots().listen((data)  {
-  //         setState(() {
-  //           _autoname = data.docs[0]['name'];
-  //           _autocontactno = data.docs[0]['contact no'];
-  //           print('autofill Name: $_autoname');
-  //           print('autofill Phone Number: $_autocontactno');
-  //           _namecontroller = TextEditingController(text: _autoname);
-  //           _contactnocontroller = TextEditingController(text: _autocontactno);
-  //         });
-  //       }
-  //     );
-  //   }
-  //     catch(e){
-  //       print("Error: " + e);
-  //   }
-  // }
 
   Future<void> autofill() async{
     try{
@@ -964,12 +991,7 @@ class _HelperProfileState extends State<HelperProfile> {
 
 
   Future<String> validateAndSubmit(BuildContext context) async{
-    if(validateAndSave()){
-      // print("File ka value is: "+file.path);
-      // bool filepath = await file.exists();
-      // print("File ka string value is: "+ (filepath.toString()));
-      // if else for each dropdown
-      
+    if(validateAndSave()){      
       print("Val and sub k andar ka phone no.: "+ _autocontactno);
       print("Val and sub k andar ka contact no.: "+ _contactno);
       if(_autocontactno == _contactno){

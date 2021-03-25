@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 import '../../constants.dart';
@@ -39,7 +40,20 @@ class _FilterState extends State<Filter> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filter'),
+        title:  Text(
+          "FILTER",
+          style: GoogleFonts.montserrat(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: kPrimaryColor
+            )
+          ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        automaticallyImplyLeading: true,
+        leading: BackButton(
+           color: kPrimaryColor
+        ), 
       ),
       body: SingleChildScrollView(
         child: Center(

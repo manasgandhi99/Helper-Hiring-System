@@ -26,34 +26,13 @@ enum AuthStatus {
 class _RootPageState extends State<RootPage> {
   String role = "";
   AuthStatus authStatus = AuthStatus.notSignedIn;
-  // final BaseAuth auth = BaseAuth();
-  // String _userId;
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final BaseAuth auth = AuthProvider.of(context).auth;
-  //   auth.currentUser().then((String userId) {
-  //     setState(() {
-  //       authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
-  //     });
-  //   });
-  // }
+ 
   @override
   void initState() {
     super.initState();
+    print("Inside init state function");
     widget.auth.currentUser().then((useremail) {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // final user = await widget.auth.currentUser();
-      // print(user);
       
-      // FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
-      // .snapshots().listen((data)  {
-      //   _city = data.docs[0]['city'];
-      //   _state = data.docs[0]['state'];
-      //   print('City: $_city');
-      //   print('State: $_state');
-      // }
-      // );
       FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: useremail)
       .snapshots().listen((data)  {
         setState((){
@@ -70,17 +49,11 @@ class _RootPageState extends State<RootPage> {
         });
       });
 
-      // if(role==""){
-      //   setState(() {
-      //     role = "no role";
-      //   });
-      // }
-
-      // SharedPreferences.getInstance().then((prefs) {
+      print("Inside widget.auth.currentUser function");
+      print("useremail: " + useremail.toString());
       setState(() {
         authStatus = useremail == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
       });
-      // });
     });
   }
 
@@ -90,12 +63,6 @@ class _RootPageState extends State<RootPage> {
       authStatus = AuthStatus.signedIn;
     });
   }
-
-  // void _signedUp() {
-  //   setState(() {
-  //     authStatus = AuthStatus.signedUp;
-  //   });
-  // }
 
   void _signedOut() {
     setState(() {
@@ -128,7 +95,11 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.signedIn:
         if(role==""){
           return Scaffold(
-            body: Center(child:CircularProgressIndicator(backgroundColor: kPrimaryColor,)),
+            body: Center(
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryColor),
+              ),
+            ),
           );
         }
 
@@ -149,10 +120,7 @@ class _RootPageState extends State<RootPage> {
         }
 
         break;
-      // case AuthStatus.signedUp:
-      //   return RoleSelection(
-      //     onSignedUp: _signedUp,
-      //   );
+     
       default:
         return _buildWaitingScreen();
     }
@@ -161,9 +129,10 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildWaitingScreen() {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        child: CircularProgressIndicator(),
+      body: Center(
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryColor),
+        ),
       ),
     );
   }

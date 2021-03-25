@@ -50,7 +50,6 @@ class _BodyState extends State<Body> {
             Container(
               
               padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0.04, size.width * 0.05, size.height*0.04),
-              
               child: SvgPicture.asset(
                 "assets/icons/chat.svg",
                 
@@ -101,7 +100,9 @@ class _BodyState extends State<Body> {
                           Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         }
                         else{
-                          print('OTP verification failed!!');
+                          print('ERROR');
+                          // Navigator.pop(context);
+                          // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         }
                         
                         },
@@ -135,7 +136,8 @@ class _BodyState extends State<Body> {
                             Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
                           }
                           else{
-                            print('OTP verification failed!!');
+                            print('ERROR');
+                            
                           }
                         },
                         child: Text(
@@ -162,8 +164,8 @@ class _BodyState extends State<Body> {
     Widget okButton = FlatButton(
       child: Text("OK", style: TextStyle(color: kPrimaryColor),),
       onPressed: () {
-        Navigator.pop(context,null);
         Navigator.pop(context);
+        // Navigator.pop(context);
         Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
       },
     );
@@ -187,6 +189,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<String> userCreation(BuildContext context) async{
+    print("Inside user creation function");
      try{
         User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: widget.email, password: widget.password)).user;
         
@@ -206,6 +209,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> store() async {
+    print("Inside store function");
     try{
       await FirebaseFirestore.instance
         .collection('employer')
@@ -228,6 +232,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> helperstore() async {
+    print("Inside helper store function");
     try{
       await FirebaseFirestore.instance
         .collection('helper')

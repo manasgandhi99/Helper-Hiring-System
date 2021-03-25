@@ -1,15 +1,15 @@
-
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../auth.dart';
 import 'filter.dart';
 import 'package:Helper_Hiring_System/Screens/Employer Screens/indetail.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Result extends StatefulWidget {
   final BaseAuth auth;
   final String category;
-  // final Map<int, List> helper_data;
   Result({Key key, this.auth, this.category}) : super(key: key);
 
   @override
@@ -32,10 +32,13 @@ class _ResultState extends State<Result> {
   @override
   void initState() {
     super.initState();
+    print("Init k andar get data call hua");
     getdata();
+    print("Init k andar get data call ho gaya");
   }
 
   Future<void> getdata() async {
+    print("Get data k andar aaya ");
     await getinfo();
   }
 
@@ -44,13 +47,14 @@ class _ResultState extends State<Result> {
   // use that list to print all the required details on the card.
   Future<void> getinfo() async {
     final user = await widget.auth.currentUser();
+    print("Get info ka user: ");
     print(user);
 
     FirebaseFirestore.instance
         .collection('employer')
         .doc(user)
         .collection('filter')
-        .where('category', isEqualTo: "house_help")
+        .where('category', isEqualTo: widget.category)
         .snapshots()
         .listen((data) async{
       _city = data.docs[0]['city'];
@@ -102,7 +106,8 @@ class _ResultState extends State<Result> {
               helper_data[i] = [event.docs[0]['photo'], event.docs[0]['name'], event.docs[0]['age'], event.docs[0]['gender'], 
                                 event.docs[0]['years of experience'], event.docs[0]['address'], event.docs[0]['duration'], 
                                 event.docs[0]['exp salary'], event.docs[0]['religion'], event.docs[0]['marital status'], 
-                                event.docs[0]['language'], event.docs[0]['category'], event.docs[0]['contact no']];
+                                event.docs[0]['language'], event.docs[0]['category'], event.docs[0]['contact no'], event.docs[0]['email'],
+                                event.docs[0]['city'], event.docs[0]['state']];
               i = i+1;
               print("event docs k andar ka helper data");
               print(helper_data);
@@ -153,7 +158,21 @@ class _ResultState extends State<Result> {
     print(lenData);
       return Scaffold(
         appBar: AppBar(
-          title: Text("Results for "+ categoryName ,style: TextStyle(fontSize: 17.0),),
+          title:  Text(
+            "Results for "+ categoryName,
+            style: GoogleFonts.montserrat(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: kPrimaryColor
+              )
+            ),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          automaticallyImplyLeading: true,
+          leading: BackButton(
+            color: kPrimaryColor
+          ), 
+          // title: Text("Results for "+ categoryName ,style: TextStyle(fontSize: 17.0),),
           actions: [
              FlatButton(
                   onPressed: () => {
@@ -162,8 +181,8 @@ class _ResultState extends State<Result> {
                   padding: EdgeInsets.only(top: size.height*0.006),
                   child: Column(
                     children: <Widget>[
-                      Icon(Icons.filter_list,color: Colors.white,),
-                      Text("Filter",style: TextStyle(color: Colors.white,),)
+                      Icon(Icons.filter_list,color: kPrimaryColor,),
+                      Text("Filter",style: TextStyle(color: kPrimaryColor,),)
                     ],
                   ),
                 ),
@@ -283,7 +302,7 @@ class _ResultState extends State<Result> {
                                               padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                                               color: kPrimaryColor,
                                               onPressed: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(helper_data_new: helper_data_new[index])));
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
                                               },
                                               child: Text(
                                                 "View Details",
@@ -312,18 +331,10 @@ class _ResultState extends State<Result> {
 
     
     Widget progressIndicator() {
-      // var brightness = MediaQuery
-      //     .of(context)
-      //     .platformBrightness == Brightness.light;
-      
       return Center(
           child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryColor),
           ),
       );
-      //   backgroundColor: brightness ? Colors.white.withOpacity(
-      //       0.70) : Colors.black.withOpacity(
-      //       0.70), // this is the main reason of transparency at next screen. I am ignoring rest implementation but what i have achieved is you can see.
-      // );
     }
 }

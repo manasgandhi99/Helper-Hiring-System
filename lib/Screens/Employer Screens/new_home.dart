@@ -9,6 +9,7 @@ import 'package:Helper_Hiring_System/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import '../../auth.dart';
+import 'history.dart';
 import 'profile.dart';
 // import 'dart:io';
 // import '../constants.dart';
@@ -23,19 +24,12 @@ class NewHome extends StatefulWidget {
 
 class _NewHomeState extends State<NewHome> {
 
-  // void initState() { 
-  //   super.initState();
-  //   script();
-  //   print("script run");
-  // }
-  
   int i = 0;
   String _city;
   String _state;
   int _selectedIndex = 0;
   String imageUrl = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
-  // var data = informationList;
-  
+ 
   @override
   void initState() { 
     super.initState();
@@ -68,8 +62,6 @@ class _NewHomeState extends State<NewHome> {
   }
 
   
-  
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -90,11 +82,11 @@ class _NewHomeState extends State<NewHome> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Text(
-                            'Hire Helper',
-                            style: GoogleFonts.roboto(
-                                color: Colors.black,
-                                fontSize: 31,
-                                fontWeight: FontWeight.bold),
+                            'HIRE HELPER',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
                           )),
 
                       GestureDetector(
@@ -148,10 +140,10 @@ class _NewHomeState extends State<NewHome> {
                           padding: EdgeInsets.only(left: 30),
                           child: Text(
                             'Services Offered',
-                            style: GoogleFonts.roboto(
-                                fontSize: 28,
+                            style: GoogleFonts.montserrat(
+                                fontSize: 23,
                                 fontWeight: FontWeight.bold,
-                                color: kPrimaryColor),
+                                color: Colors.black),
                           ),
                         ),
                       ],
@@ -205,7 +197,7 @@ class _NewHomeState extends State<NewHome> {
                         // CustomCard("Balcony", "2 lights", 'assets/images/balcony.png'),
                         CustomCard(      
                           header: "Office Help",
-                          displayImage: "assets/images/officehelp1.jpg",
+                          displayImage: "assets/images/officehelp.png",
                           auth: widget.auth,
                           category :'office_help'
                         ),
@@ -224,25 +216,8 @@ class _NewHomeState extends State<NewHome> {
           ],
         ),
       ]),
-      Scaffold(
-        appBar: AppBar(
-          title: Text('History'),
-          automaticallyImplyLeading: true,
-        ),
-        body: Container(
-          child: Center(child: Text("This is History Page", style: TextStyle(fontSize: 32.0))),
-        ),
-      ),
-    
-      // Scaffold(
-      //   appBar: AppBar(
-      //     title: Text('Rate Card'),
-      //     automaticallyImplyLeading: true,
-      //   ),
-      //   body: Container(
-      //     child: Center(child: Text("This is Rate Card Page", style: TextStyle(fontSize: 32.0))),
-      //   ),
-      // ),
+      
+      History(auth: widget.auth,),
       RateCard(),
   ];
     

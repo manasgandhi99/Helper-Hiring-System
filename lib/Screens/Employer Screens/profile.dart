@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_otp/flutter_otp.dart';
@@ -68,9 +69,16 @@ class _ProfileState extends State<Profile> {
     super.initState();
   }
 
-  // Future<void> callAutofill() async{
-  //   await autofill();
-  // }
+  void _signOut(BuildContext context) async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } 
+    catch (e) {
+      print("Error in Signout!!");
+      print(e);
+    }
+  }
 
   @override
   void dispose() {
@@ -82,16 +90,7 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
-  void _signOut(BuildContext context) async {
-    try {
-      await widget.auth.signOut();
-      widget.onSignedOut();
-    } 
-    catch (e) {
-      print("Error in Signout!!");
-      print(e);
-    }
-  }
+  
   
   final _formKey = GlobalKey<FormState>(); 
 
@@ -101,29 +100,43 @@ class _ProfileState extends State<Profile> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-                "Profile",
-                style: TextStyle(fontSize: 20.0),
-                ),
+        title:  Text(
+          "PROFILE",
+          style: GoogleFonts.montserrat(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: kPrimaryColor
+            )
+          ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
         automaticallyImplyLeading: true,
-         actions: [
-             FlatButton(
-                  onPressed: () => {
-                    Navigator.pop(context),
-                    // Navigator.popUntil(context, ModalRoute.withName('/welcome')),
-                    _signOut(context),
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> Filter())),
-                  },
-                  padding: EdgeInsets.only(top: size.height*0.006),
-                  child: Column(
-                    children: <Widget>[
-                      Icon(Icons.logout,color: Colors.white,),
-                      Text("Logout",style: TextStyle(color: Colors.white,),)
-                    ],
-                  ),
+        leading: BackButton(
+           color: kPrimaryColor
+        ), 
+        actions: [
+            FlatButton(
+                onPressed: () => {
+                  Navigator.pop(context),
+                  _signOut(context),
+                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> Filter())),
+                },
+                padding: EdgeInsets.only(top: size.height*0.006),
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.logout,color: kPrimaryColor,),
+                    Text(
+                    "Logout",
+                    style: GoogleFonts.montserrat(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor
+                      )
+                    ),
+                  ],
                 ),
-          ],
-        // backgroundColor: Colors.white,
+              ),
+        ],
       ),
       
       body: SingleChildScrollView(
@@ -451,8 +464,8 @@ class _ProfileState extends State<Profile> {
       title: 'Congratulations',
       desc:'Your Profile is updated Successfully!',
       btnOkOnPress: () {
-        Navigator.pop(context);
-        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth,)));
+        // Navigator.pop(context);
+        // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth,)));
       },
       
       // btnCancelOnPress: () {},

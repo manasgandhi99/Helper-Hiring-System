@@ -5,16 +5,16 @@ import 'package:Helper_Hiring_System/constants.dart';
 import 'package:url_launcher/url_launcher.dart'; 
 import 'package:awesome_dialog/awesome_dialog.dart';
 
-class InDetail extends StatefulWidget {
+class HistInDetail extends StatefulWidget {
   final BaseAuth auth;
   final List helper_data_new;
-  InDetail({Key key, this.auth, this.helper_data_new}) : super(key: key);
+  HistInDetail({Key key, this.auth, this.helper_data_new}) : super(key: key);
 
   @override
-  _InDetailState createState() => _InDetailState();
+  _HistInDetailState createState() => _HistInDetailState();
 }
 
-class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin{
+class _HistInDetailState extends State<HistInDetail> with SingleTickerProviderStateMixin{
 
   TabController _tabController;
   String category = "";
@@ -40,24 +40,24 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
   }
 
     Size size = MediaQuery.of(context).size;
-    if(widget.helper_data_new[11][0]=='h'){
-      category="House Help";
-    }
-    else if(widget.helper_data_new[11][0]=='o'){
-      category="Office Help";
-    }
-    else if(widget.helper_data_new[11][0]=='p'){
-      category="Patient Care";
-    }
-    else if(widget.helper_data_new[11][0]=='c'){
-      category="Cook";
-    }
-    else if(widget.helper_data_new[11][0]=='e'){
-      category="Elderly Care";
-    }
-    else if(widget.helper_data_new[11][0]=='b'){
-      category="BabySitting";
-    }
+    // if(widget.helper_data_new[11][0]=='h'){
+    //   category="House Help";
+    // }
+    // else if(widget.helper_data_new[11][0]=='o'){
+    //   category="Office Help";
+    // }
+    // else if(widget.helper_data_new[11][0]=='p'){
+    //   category="Patient Care";
+    // }
+    // else if(widget.helper_data_new[11][0]=='c'){
+    //   category="Cook";
+    // }
+    // else if(widget.helper_data_new[11][0]=='e'){
+    //   category="Elderly Care";
+    // }
+    // else if(widget.helper_data_new[11][0]=='b'){
+    //   category="BabySitting";
+    // }
     
     return Scaffold(
        appBar: AppBar(
@@ -74,20 +74,6 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
 
                 SizedBox(height:size.height*0.02),
 
-                // Container(
-                // width: size.width*0.95,
-                // // color: Colors.blue[100],
-                // padding: EdgeInsets.fromLTRB(size.width*0.03,size.width*0.02,size.width*0.03,size.width*0.02),
-                // decoration: BoxDecoration(
-                //   color: kPrimaryLightColor,0
-                  
-                //   border: Border.all(
-                //     color: Colors.black,
-                //     width: 2,
-                //   ),
-                //   borderRadius: BorderRadius.circular(30),
-                // ),
-                // child:
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,7 +115,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                               ),),
                               
                               Text(
-                                category,
+                                widget.helper_data_new[11],
                                 style: TextStyle(
                                   fontFamily: 'SourceSansPro',
                                   fontSize: 17.0,
@@ -191,30 +177,11 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                     color: kPrimaryColor,
                     onPressed: (){
-                      sethistorydata();
-                      AwesomeDialog(
-                        context: context,
-                        animType: AnimType.LEFTSLIDE,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.SUCCES,
-                        title: '+91 ' + widget.helper_data_new[12],
-                        desc:
-                             'Would you like to call now ?',
-                        btnOkOnPress: () {
-                          _makingPhoneCall();
-                        },
-                        
-                        btnCancelOnPress: () {},
-                        btnOkIcon: Icons.check_circle,
-                        btnCancelIcon: Icons.cancel,
-                        onDissmissCallback: () {
-                          debugPrint('Dialog Dismiss from callback');
-                        })
-                      ..show();
+                      _makingPhoneCall();
                     },
                     child: Text(
-                      "Get Contact Number",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      '+91 - ' + widget.helper_data_new[12],
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),
@@ -228,32 +195,6 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
     );
   }
 
-  Future<void> sethistorydata() async{
-      try{
-        final user = await widget.auth.currentUser();
-        print(user);
-
-        // await FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
-        // .snapshots().listen((data)  {
-        //   _city = data.docs[0]['city'];
-        //   _state = data.docs[0]['state'];
-        //   print('City: $_city');
-        //   print('State: $_state');
-        // }
-        
-        // );
-
-        await FirebaseFirestore.instance.collection('employer').doc(user).collection('history').doc(widget.helper_data_new[13])
-        .set(
-          {'name': widget.helper_data_new[1],'contact no': widget.helper_data_new[12], 'address': widget.helper_data_new[5],'age': widget.helper_data_new[2], 'category': category, 'city': widget.helper_data_new[14], 'duration': widget.helper_data_new[6], 
-          'exp salary': widget.helper_data_new[7], 'gender': widget.helper_data_new[3], 'language': widget.helper_data_new[10], 'marital status': widget.helper_data_new[9], 'photo': widget.helper_data_new[0], 
-          'religion': widget.helper_data_new[8], 'state': widget.helper_data_new[15], 'years of experience': widget.helper_data_new[4]}
-        );
-      }
-      catch(e){
-        print("Error :" + e.toString());
-      }
-  }
 
   Widget profileDetail(Size size) {
      
