@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -79,9 +80,20 @@ class _HistoryState extends State<History> {
                         // items.removeAt(index);
                       });
 
-                      Scaffold.of(context).showSnackBar(SnackBar(content: Text(helper_data_new[index][1] +"is dismissed")));
+                      final snackBar = SnackBar(
+                        content: Text(helper_data_new[index][1] +" was removed!"),
+                        action: SnackBarAction(
+                          disabledTextColor: Colors.amber[300],
+                          label: 'OK',
+                          textColor: Colors.amber[300],
+                          onPressed: () {},
+                        ),
+                      );
+
+                      Scaffold.of(context).showSnackBar(snackBar);
                     },
-                    child: Column(children: [
+                    child: Column(
+                      children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(25.0),
                         child: Card(
@@ -165,7 +177,7 @@ class _HistoryState extends State<History> {
                                       // SizedBox(height: 5),
 
                                       Text(
-                                        helper_data_new[index][13] + "," + helper_data_new[index][14],
+                                        helper_data_new[index][13] + ", " + helper_data_new[index][14],
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w700,
@@ -200,7 +212,9 @@ class _HistoryState extends State<History> {
                           ),
                         ),
                       ),
+
                       SizedBox(height: size.height * 0.006),
+                      
                     ]),
                   );
                 }

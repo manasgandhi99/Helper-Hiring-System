@@ -18,8 +18,11 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
 
   TabController _tabController;
   String category = "";
+  String _name = "";
+  String _photo = "";
   String _city = "";
   String _state = "";
+  String _contactno = "";
 
   @override
   void initState() {
@@ -190,8 +193,9 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                   child: FlatButton(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                     color: kPrimaryColor,
-                    onPressed: (){
+                    onPressed: () async{
                       sethistorydata();
+                      await getemployerdata();
                       AwesomeDialog(
                         context: context,
                         animType: AnimType.LEFTSLIDE,
@@ -253,6 +257,59 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
       catch(e){
         print("Error :" + e.toString());
       }
+  }
+
+  Future<void> getemployerdata() async{
+    try{
+      final user = await widget.auth.currentUser();
+      print(user);
+
+      await FirebaseFirestore.instance.collection('employer').doc(user).collection('profile').where('email', isEqualTo: user)
+      .snapshots().listen((data)  {
+        _photo = data.docs[0]['photo'];
+        _name = data.docs[0]['name'];
+        _contactno = data.docs[0]['contact no'];
+        
+        print('Photu: $_photo');
+        print('Name: $_name');
+        print('Contact No: $_contactno');
+
+        setemployerdata();
+      }
+      );
+      
+    }
+    catch(e){
+      print("Error :" + e.toString());
+    }
+  }
+
+  Future<void> setemployerdata() async{
+    try{
+      final user = await widget.auth.currentUser();
+      print(user);
+
+      // await FirebaseFirestore.instance.collection('employer').doc(user).collection('profile').where('email', isEqualTo: user)
+      // .snapshots().listen((data)  {
+      //   _photo = data.docs[0]['photo'];
+      //   _name = data.docs[0]['name'];
+      //   _contactno = data.docs[0]['contact no'];
+        
+      //   print('Photu: $_photo');
+      //   print('Name: $_name');
+      //   print('Contact No: $_contactno');
+      // }
+      
+      // );
+
+      await FirebaseFirestore.instance.collection('helper').doc(widget.helper_data_new[13]).collection('notification').doc(user)
+      .set(
+        {'name': _name,'contact no': _contactno, 'photo': _photo, 'city': widget.helper_data_new[14], 'state': widget.helper_data_new[15]}
+      );
+    }
+    catch(e){
+      print("Error :" + e.toString());
+    }
   }
 
   Widget profileDetail(Size size) {
