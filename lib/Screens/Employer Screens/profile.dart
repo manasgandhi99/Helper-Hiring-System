@@ -1,8 +1,5 @@
 import 'dart:math';
-import 'package:Helper_Hiring_System/Screens/Login/components/background.dart';
-import 'package:Helper_Hiring_System/components/already_have_an_account_acheck.dart';
 import 'package:Helper_Hiring_System/components/text_field_container.dart';
-import 'package:Helper_Hiring_System/root_page.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

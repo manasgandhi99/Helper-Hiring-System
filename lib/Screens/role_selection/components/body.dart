@@ -1,4 +1,3 @@
-import 'package:Helper_Hiring_System/Screens/Signup/signup_screen.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -7,10 +6,7 @@ import 'package:Helper_Hiring_System/Screens/Welcome/components/background.dart'
 // import 'package:Helper_Hiring_System/components/rounded_button.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';

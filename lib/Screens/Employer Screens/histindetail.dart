@@ -1,9 +1,7 @@
 import 'package:Helper_Hiring_System/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:url_launcher/url_launcher.dart'; 
-import 'package:awesome_dialog/awesome_dialog.dart';
 
 class HistInDetail extends StatefulWidget {
   final BaseAuth auth;

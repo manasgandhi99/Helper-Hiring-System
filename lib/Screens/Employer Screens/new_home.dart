@@ -1,4 +1,3 @@
-
 import 'package:Helper_Hiring_System/Screens/Employer%20Screens/ratecard.dart';
 import 'package:Helper_Hiring_System/Widgets/customcard.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
 import '../../auth.dart';
 import 'history.dart';
 import 'profile.dart';
@@ -226,7 +224,7 @@ class _NewHomeState extends State<NewHome> {
       child: Scaffold(
       // Colors.amber[300]
       backgroundColor: Colors.amber[300],
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: kPrimaryLightColor,
         selectedItemColor: kPrimaryColor,
