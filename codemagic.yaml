@@ -1,14 +1,50 @@
-# Customize the codemagic.yaml file according to your project and commit it to the root of your repository
-# Check out https://docs.codemagic.io/getting-started/yaml/ for more information
-# You can also download your configuration from Worklow Editor to get started
+# Automatically generated on 2021-03-29 UTC from https://codemagic.io/app/606152fdca9e142e7d793b78/settings
+# Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
 
 workflows:
-  example-workflow:
-    name: Example Workflow
+  default-workflow:
+    name: Default Workflow
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
     scripts:
-      - name: Step name
-        script: echo "Hello Codemagician!"
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - cd . && flutter packages pub get
+      - cd . && flutter build apk --release
+      - find . -name "Podfile" -execdir pod install \;
+      - cd . && flutter build ios --release --no-codesign
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
     publishing:
       email:
         recipients:
-          - codemagic@example.com
+          - akshar.barchha@somaiya.edu
+          - manas.gandhi@somaiya.edu
