@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,8 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
   String _city = "";
   String _state = "";
   String _contactno = "";
+  List <String> userToken = [];
+  String employername = "";
 
   @override
   void initState() {
@@ -32,15 +36,6 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-
-    _makingPhoneCall() async {
-    String url = 'tel:'+ widget.helper_data_new[12]; 
-    if (await canLaunch(url)) { 
-      await launch(url); 
-    } else { 
-      throw 'Could not launch $url'; 
-    } 
-  }
 
     Size size = MediaQuery.of(context).size;
     if(widget.helper_data_new[11][0]=='h'){
@@ -196,6 +191,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                     onPressed: () async{
                       sethistorydata();
                       await getemployerdata();
+                      await getemployername();
                       AwesomeDialog(
                         context: context,
                         animType: AnimType.LEFTSLIDE,
@@ -230,6 +226,79 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
         )
       )
     );
+  }
+
+  Future<void> getemployername() async{
+    final user = await widget.auth.currentUser();
+    await FirebaseFirestore.instance
+    .collection('employer')
+    .doc(user)
+    .collection('profile')
+    .doc(user)
+    .get()
+    .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('Document data: ${documentSnapshot.data()['name']}');
+        employername = documentSnapshot.data()['name'];
+        callOnFcmApiSendPushNotifications();
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+
+  }
+
+  Future<void> callOnFcmApiSendPushNotifications() async {
+    print("Insisde call in fcm api function");
+    final user = await widget.auth.currentUser();
+    await FirebaseFirestore.instance
+    .collection('helper')
+    .doc(widget.helper_data_new[13])
+    .collection('tokens')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+            print(doc["token"]);
+            userToken.add(doc["token"]);
+        });
+    });
+
+    final postUrl = 'https://fcm.googleapis.com/fcm/send';
+    final data = {
+      "registration_ids" : userToken,
+      "collapse_key" : "type_a",
+      "notification" : {
+        "title": 'New Job Opportunity!!',
+        "body" : employername + ' has tried to extract your number!',
+      }
+    };
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization': firebaseTokenAPIFCM // 'key=YOUR_SERVER_KEY'
+    };
+
+    final response = await http.post(postUrl,
+        body: json.encode(data),
+        encoding: Encoding.getByName('utf-8'),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      // on success do sth
+      print('test ok push CFM');
+    } else {
+      print(' CFM error');
+      // on failure do sth
+    }
+}
+
+   _makingPhoneCall() async {
+    String url = 'tel:'+ widget.helper_data_new[12]; 
+    if (await canLaunch(url)) { 
+      await launch(url); 
+    } else { 
+      throw 'Could not launch $url'; 
+    } 
   }
 
   Future<void> sethistorydata() async{
@@ -288,19 +357,6 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
     try{
       final user = await widget.auth.currentUser();
       print(user);
-
-      // await FirebaseFirestore.instance.collection('employer').doc(user).collection('profile').where('email', isEqualTo: user)
-      // .snapshots().listen((data)  {
-      //   _photo = data.docs[0]['photo'];
-      //   _name = data.docs[0]['name'];
-      //   _contactno = data.docs[0]['contact no'];
-        
-      //   print('Photu: $_photo');
-      //   print('Name: $_name');
-      //   print('Contact No: $_contactno');
-      // }
-      
-      // );
 
       await FirebaseFirestore.instance.collection('helper').doc(widget.helper_data_new[13]).collection('notification').doc(user)
       .set(
