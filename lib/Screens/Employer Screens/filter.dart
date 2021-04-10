@@ -1,12 +1,17 @@
+import 'package:Helper_Hiring_System/Screens/Employer%20Screens/result.dart';
+import 'package:Helper_Hiring_System/components/text_field_container.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
-
+import '../../auth.dart';
 import '../../constants.dart';
 
 
 class Filter extends StatefulWidget {
-  Filter({Key key}) : super(key: key);
+  final BaseAuth auth;
+  final String category;
+  Filter({Key key, this.auth, this.category}) : super(key: key);
 
   @override
   _FilterState createState() => _FilterState();
@@ -14,24 +19,128 @@ class Filter extends StatefulWidget {
 
 class _FilterState extends State<Filter> {
 
-  List _myActivities;
-  String _myActivitiesResult;
+  List _gender,_duration,_religion, _autoreligion;
+  String _genderResult, _durationResult, _religionResult, _budget, _autocity, _autostate, _yoe, _city, _state;
   final formKey = new GlobalKey<FormState>();
+  TextEditingController _statecontroller; 
+  TextEditingController _citycontroller; 
 
   @override
   void initState() {
     super.initState();
-    _myActivities = [];
-    _myActivitiesResult = '';
+    _gender = ['Male', 'Female', 'Transgender'];
+    _genderResult = '';
+    _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
+    _durationResult = '';
+    _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
+    _religionResult = '';
+    _budget = "Low to High";
+    _yoe = "High to Low";
+    autofill();
+  }
+
+  Future<void> autofill() async{
+    try{
+        final user = await widget.auth.currentUser();
+        print(user); 
+        FirebaseFirestore.instance.collection('employer').doc(user).collection('filter')
+        .where('category', isEqualTo: widget.category)
+        .snapshots().listen((data)  {
+          setState(() {
+            _autocity = data.docs[0]['city'];
+            _autostate = data.docs[0]['state'];
+            _autoreligion = data.docs[0]['religion'];
+            print('autofill City: $_autocity');
+            print('autofill State: $_autostate');
+            print('autofill Religion: $_autoreligion');
+            _citycontroller = TextEditingController(text: _autocity);
+            _statecontroller = TextEditingController(text: _autostate);
+          });
+        }
+      );
+    }
+      catch(e){
+        print("Error: " + e);
+    }
   }
 
   _saveForm() {
     var form = formKey.currentState;
     if (form.validate()) {
-      form.save();
       setState(() {
-        _myActivitiesResult = _myActivities.toString();
+        if(_gender.isEmpty){
+          _gender = ['Male', 'Female', 'Transgender'];
+        }
+        if(_religion.isEmpty){
+          _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
+        }
+        if(_duration.isEmpty){
+          _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
+        }
       });
+      
+      form.save();
+      // setState(() {
+      //   _genderResult = _gender;
+      //   _durationResult = _duration.toString();
+      //   _religionResult = _religion.toString();
+      // });
+      setfilter();
+      
+    }
+  }
+
+  Future<void> getresults() async{
+    try{
+      final user = await widget.auth.currentUser();
+      FirebaseFirestore.instance
+      .collection('helper')
+      .where('city', isEqualTo: _citycontroller.text)
+      .where('state', isEqualTo: _statecontroller.text)
+      .where('category', isEqualTo: widget.category)
+      .snapshots()
+      .listen((data) {
+        data.docs.forEach((result)async{
+          FirebaseFirestore.instance
+          .collection('helper')
+          .doc(result['email'])
+          .collection('profile')
+          .where('religion', whereIn : _religion)
+          .where('gender', whereIn: _gender)
+          .where('duration', whereIn: _duration);
+          
+          
+        });
+      });
+    }
+    catch(e){
+      print("Error in getting results: " + e);
+    }
+  }
+
+  Future<void> setfilter() async{
+    try{
+        final user = await widget.auth.currentUser();
+        print(user); 
+        FirebaseFirestore.instance
+        .collection('employer')
+        .doc(user)
+        .collection('filter')
+        .doc(widget.category)
+        .update({
+          'city': _city,
+          'state': _state,
+          'religion': _religion,
+          'duration': _duration,
+          'gender': _gender,
+          'budget': _budget,
+          'yearofexp': _yoe,
+        });
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> Result(auth: widget.auth, category: widget.category)));
+    }
+    catch(e){
+        print("Error: " + e);
     }
   }
 
@@ -74,6 +183,7 @@ class _FilterState extends State<Filter> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextFormField(
+                    controller: _statecontroller,
                     validator: (value){
                       if(value.isEmpty){
                         return "Please enter some value.";
@@ -90,6 +200,7 @@ class _FilterState extends State<Filter> {
                       hintText: "State",
                       border: InputBorder.none,
                     ),
+                    onSaved: (value) => _state = value,
                   ),
                 ),
 
@@ -102,6 +213,7 @@ class _FilterState extends State<Filter> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextFormField(
+                    controller: _citycontroller,
                     validator: (value){
                       if(value.isEmpty){
                         return "Please enter some value.";
@@ -118,46 +230,48 @@ class _FilterState extends State<Filter> {
                       hintText: "City",
                       border: InputBorder.none,
                     ),
+                    onSaved: (value) => _city = value,
                   ),
                 ),
 
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(20,10,20,5),
                   child: MultiSelectFormField(
+                    fillColor: kPrimaryLightColor,
                     autovalidate: false,
-                    chipBackGroundColor: Colors.red,
+                    chipBackGroundColor: kPrimaryColor,
                     chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
                     dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                    checkBoxActiveColor: Colors.red,
-                    checkBoxCheckColor: Colors.green,
+                    checkBoxActiveColor: kPrimaryColor,
+                    checkBoxCheckColor: Colors.white,
                     dialogShapeBorder: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0))),
                     title: Text(
                       "Religion",
                       style: TextStyle(fontSize: 16),
                     ),
-                    validator: (value) {
-                      if (value == null || value.length == 0) {
-                        return 'Please select one or more options';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.length == 0) {
+                    //     return 'Please select one or more options';
+                    //   }
+                    //   return null;
+                    // },
                     dataSource: [
                       {
                         "display": "Hindu",
-                        "value": "Running",
+                        "value": "Hindu",
                       },
                       {
                         "display": "Muslim",
-                        "value": "Climbing",
+                        "value": "Muslim",
                       },
                       {
                         "display": "Christian",
-                        "value": "Walking",
+                        "value": "Christian",
                       },
                       {
                         "display": "Others",
-                        "value": "Swimming",
+                        "value": "Others",
                       },
                     ],
                     textField: 'display',
@@ -165,53 +279,54 @@ class _FilterState extends State<Filter> {
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
                     hintWidget: Text('Please choose one or more'),
-                    initialValue: _myActivities,
+                    initialValue: _autoreligion,
                     onSaved: (value) {
                       if (value == null) return;
                       setState(() {
-                        _myActivities = value;
+                        _religion = value;
                       });
                     },
                   ), 
                 ),
 
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(20,10,20,5),
                   child: MultiSelectFormField(
+                    fillColor: kPrimaryLightColor,
                     autovalidate: false,
-                    chipBackGroundColor: Colors.red,
+                    chipBackGroundColor: kPrimaryColor,
                     chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
                     dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                    checkBoxActiveColor: Colors.red,
-                    checkBoxCheckColor: Colors.green,
+                    checkBoxActiveColor: kPrimaryColor,
+                    checkBoxCheckColor: Colors.white,
                     dialogShapeBorder: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0))),
                     title: Text(
                       "Duration (Per Day)",
                       style: TextStyle(fontSize: 16),
                     ),
-                    validator: (value) {
-                      if (value == null || value.length == 0) {
-                        return 'Please select one or more options';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.length == 0) {
+                    //     return 'Please select one or more options';
+                    //   }
+                    //   return null;
+                    // },
                     dataSource: [
                       {
                         "display": "Less than 2 hours",
-                        "value": "Running",
+                        "value": "Less than 2",
                       },
                       {
                         "display": "2 - 4 hours",
-                        "value": "Climbing",
+                        "value": "2-4",
                       },
                       {
                         "display": "4 - 6 hours",
-                        "value": "Walking",
+                        "value": "4-6",
                       },
                       {
                         "display": "More than 6 hours",
-                        "value": "Swimming",
+                        "value": "More than 6",
                       },
                     ],
                     textField: 'display',
@@ -219,11 +334,11 @@ class _FilterState extends State<Filter> {
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
                     hintWidget: Text('Please choose one or more'),
-                    initialValue: _myActivities,
+                    initialValue: _duration,
                     onSaved: (value) {
                       if (value == null) return;
                       setState(() {
-                        _myActivities = value;
+                        _duration = value;
                       });
                     },
                   ),
@@ -232,38 +347,39 @@ class _FilterState extends State<Filter> {
                 ),
 
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(20,10,20,5),
                   child: MultiSelectFormField(
+                    fillColor: kPrimaryLightColor,
                     autovalidate: false,
-                    chipBackGroundColor: Colors.red,
+                    chipBackGroundColor: kPrimaryColor,
                     chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
                     dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                    checkBoxActiveColor: Colors.red,
-                    checkBoxCheckColor: Colors.green,
+                    checkBoxActiveColor: kPrimaryColor,
+                    checkBoxCheckColor: Colors.white,
                     dialogShapeBorder: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0))),
                     title: Text(
                       "Gender",
                       style: TextStyle(fontSize: 16),
                     ),
-                    validator: (value) {
-                      if (value == null || value.length == 0) {
-                        return 'Please select one or more options';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.length == 0) {
+                    //     return 'Please select one or more options';
+                    //   }
+                    //   return null;
+                    // },
                     dataSource: [
                       {
                         "display": "Male",
-                        "value": "Running",
+                        "value": "Male",
                       },
                       {
                         "display": "Female",
-                        "value": "Climbing",
+                        "value": "Female",
                       },
                       {
                         "display": "Transgender",
-                        "value": "Walking",
+                        "value": "Transgender",
                       },
 
                     ],
@@ -272,15 +388,157 @@ class _FilterState extends State<Filter> {
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
                     hintWidget: Text('Please choose one or more'),
-                    initialValue: _myActivities,
+                    initialValue: _gender,
                     onSaved: (value) {
-                      if (value == null) return;
+                      if (value == null){
+                          // if(_gender.isEmpty){
+                          _gender = ['Male', 'Female', 'Transgender'];
+                          // }
+                      }
                       setState(() {
-                        _myActivities = value;
+                        _gender = value;
                       });
                     },
                   ),
                 ),
+
+                
+               
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    width: size.width * 0.93,
+                    height: size.height * 0.112,
+                    decoration: BoxDecoration(
+                      color: kPrimaryLightColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Expected Salary",style: TextStyle(fontSize: 16),),
+                        Row(  
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        
+                          children: <Widget>[
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "Low to High",  
+                              groupValue: _budget,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _budget = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              'Low to High',
+                            ),
+
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "High to Low",  
+                              groupValue: _budget,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _budget = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              'High to Low',
+                            ), 
+                            // Expanded(
+                            //   child: ListTile(  
+                            //     title: Text('High to Low'),  
+                            //     leading: 
+                            //     Radio(  
+                            //       activeColor: kPrimaryColor,
+                            //       value: "High to Low",  
+                            //       groupValue: _budget,  
+                            //       onChanged: (String value) {  
+                            //         setState(() {  
+                            //           _budget = value;  
+                            //         });  
+                            //       },  
+                            //     ),  
+                            //   ),
+                            // ),  
+                          ],  
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    width: size.width * 0.93,
+                    height: size.height * 0.112,
+                    decoration: BoxDecoration(
+                      color: kPrimaryLightColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Years of Experience",style: TextStyle(fontSize: 16),),
+                        Row(  
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "Low to High",  
+                              groupValue: _yoe,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _yoe = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              'Low to High',
+                            ),
+
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "High to Low",  
+                              groupValue: _yoe,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _yoe = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              'High to Low',
+                            ), 
+                            // Expanded(
+                            //   child: ListTile(  
+                            //     title: Text('High to Low'),  
+                            //     leading: 
+                            //     Radio(  
+                            //       activeColor: kPrimaryColor,
+                            //       value: "High to Low",  
+                            //       groupValue: _budget,  
+                            //       onChanged: (String value) {  
+                            //         setState(() {  
+                            //           _budget = value;  
+                            //         });  
+                            //       },  
+                            //     ),  
+                            //   ),
+                            // ),  
+                          ],  
+                        ),
+                      ],
+                    ),
+                  ),
+                  
 
                 // Container(
                 //   padding: EdgeInsets.all(8),
@@ -292,7 +550,7 @@ class _FilterState extends State<Filter> {
                 Container(
                   color: kPrimaryColor,
                   margin: EdgeInsets.symmetric(vertical: 10),
-                  width: size.width * 0.6,
+                  width: size.width * 0.5,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
                     child: FlatButton(
@@ -306,10 +564,19 @@ class _FilterState extends State<Filter> {
                     ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Text(_myActivitiesResult),
-                )
+
+                // Container(
+                //   padding: EdgeInsets.all(16),
+                //   child: Column(
+                //     children: <Widget>[
+                //       Text(_religionResult),
+                //       Text(_durationResult),
+                //       Text(_genderResult),
+                //       Text(_budget),
+                //       Text(_yoe),
+                //     ],
+                //   )
+                // )
               ],
             ),
           ),

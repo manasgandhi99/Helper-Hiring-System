@@ -101,7 +101,7 @@ class CustomCard extends StatelessWidget {
         .collection('filter')
         .doc(category)
         .set(
-        {'city': _city,'state': _state, 'religion': "",'duration': "", 'gender': "", 'budget': "", 'yearofexp': "", 'category': category});
+        {'city': _city,'state': _state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category});
     }
     catch(e){
       print("Error: " + e);

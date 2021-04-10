@@ -86,6 +86,12 @@ class _BodyState extends State<Body> {
                         onPressed: ()async{
                         // SharedPreferences prefs = await SharedPreferences.getInstance();
                         // prefs.setBool("pref"+ widget.email, true);
+                        setData('house_help');
+                        setData('office_help');
+                        setData('babysitting');
+                        setData('patient_care');
+                        setData('cook');
+                        setData('elderly_care');
                         print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
                         String useruid = await userCreation(context);
                         print("apna Userid: "+ useruid);
@@ -182,6 +188,25 @@ class _BodyState extends State<Body> {
         return alert;
       },
     );
+  }
+
+  Future<void> setData(String category) async {
+    print("set data me city"+widget.city);
+    try{
+      final user = await widget.auth.currentUser();
+      print(user);
+      await FirebaseFirestore.instance
+        .collection('employer')
+        .doc(user)
+        .collection('filter')
+        .doc(category)
+        .set(
+        {'city': widget.city,'state': widget.state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low"});
+    }
+    catch(e){
+      print("Error: " + e);
+    }
+    
   }
 
   Future<String> userCreation(BuildContext context) async{
