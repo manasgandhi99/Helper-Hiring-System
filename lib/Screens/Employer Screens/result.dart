@@ -20,7 +20,7 @@ class Result extends StatefulWidget {
 
 class _ResultState extends State<Result> {
 
-  int lenData;
+  int lenData, i, j;
   String _city = "";
   String _state = "";
   List<String> items1 = [];
@@ -30,7 +30,7 @@ class _ResultState extends State<Result> {
   Map<int, List> helper_data_naya_new = {};
   bool flag = false;
   bool isLoading = true, budgetorder = false, yearofexporder = true;
-  String categoryName = "", _budget = "", _yearofexp = "";
+  String categoryName = "", _budget = "", _yearofexp = "", _pref="";
   List _gender =[], _religion = [], _duration = [];
 
   @override
@@ -68,6 +68,7 @@ class _ResultState extends State<Result> {
       _religion = data.docs[0]['religion'];
       _budget = data.docs[0]['budget'];
       _yearofexp = data.docs[0]['yearofexp'];
+      _pref = data.docs[0]['pref'];
       // fetch all data and listsss
       print('Result page ka City: $_city');
       print('Result page ka State: $_state');
@@ -102,14 +103,15 @@ class _ResultState extends State<Result> {
           lenData = data.docs.length;
           if(lenData == 0) {
             setState(() {
-            flag=true;  
+              flag=true;  
             });
           }
 
           print("Flag: "+flag.toString());
           print(lenData);
 
-          int i = 0,j=0;
+          i = 0;
+          j = 0;
           data.docs.forEach((result) async {
             print("Data.docs k andar aaya!!");
             print(result.data());
@@ -138,7 +140,7 @@ class _ResultState extends State<Result> {
                             i = i+1;
                             print("event docs k andar ka helper data");
                             print(helper_data);
-                            helper_data_naya_new = helper_data;
+                            helper_data_new = helper_data;
                             // setState(() {
                             //   // helper_data_new = helper_data;
                             //   // print("set state ka items");
@@ -156,16 +158,17 @@ class _ResultState extends State<Result> {
                   }
                         j=j+1;
                         setState((){
-                          helper_data_naya_new = helper_data;
-                            // print("set state ka items");
-                            // print(helper_data_new);
-                            if(j == lenData){
-                              isLoading = false;
-                            }
-                            else{
-                              isLoading = true;
-                            }
-                            // print("Heloooooo");
+                          helper_data_new = helper_data;
+                          // print("set state ka items");
+                          // print(helper_data_new);
+                          if(j == lenData){
+                            isLoading = false;
+                          }
+                          else{
+                            isLoading = true;
+                          }
+                          
+                          // print("Heloooooo");
                       });      
                 });
           });
@@ -197,27 +200,135 @@ class _ResultState extends State<Result> {
     }
     Size size = MediaQuery.of(context).size;
     print("Flag new" + flag.toString());
+    print(helper_data);
+    print(j);
     print("build ka helper data");
-    print(helper_data_naya_new);
-    helper_data_new = helper_data_naya_new ;
-    // if(_yearofexp != "High to Low"){
-    //   helper_data_new = Map.fromEntries(
-    //   helper_data_naya_new.entries.toList()
-    //   ..sort((e1, e2) => e1.value[4].compareTo(e2.value[4])));
-    //   print("sorted map:");
-    //   print(helper_data_new);
+    print(helper_data_new);
+    // if(helper_data_new.length == 0){
+    //   setState(() {
+    //     flag = true;
+    //     isLoading = false;
+    //   });                        
     // }
-    // else{
-    //   print("else k andar");
-    //   helper_data_new = SplayTreeMap.from(
-    //   helper_data_naya_new , (key1,key2) => helper_data_naya_new[key1][4].compareTo(helper_data_naya_new[key2][4]));
-    //   print(helper_data_new);
-    // }
-    // var sortedMap = Map.fromEntries(
-    // helper_data_new.entries.toList()
-    // ..sort((e1, e2) => e1.value[7].compareTo(e2.value[7])));
+    if(_pref == "Expected Salary"){
+      if(_budget == "Low to High"){
+        for(int i=0;i<helper_data_new.length-1;i++){
+          for(int j=i+1;j<helper_data_new.length;j++){
+            if(int.parse(helper_data_new[j][7]) < int.parse(helper_data_new[i][7])){
+              List temp =  helper_data_new[j];
+              helper_data_new[j] = helper_data_new[i];
+              helper_data_new[i] = temp;
+            }
+            else if(int.parse(helper_data_new[j][7]) == int.parse(helper_data_new[i][7])){
+              if(_yearofexp == "Low to High"){
+                if(int.parse(helper_data_new[j][4]) < int.parse(helper_data_new[i][4])){
+                  List temp =  helper_data_new[j];
+                  helper_data_new[j] = helper_data_new[i];
+                  helper_data_new[i] = temp;
+                }
+              }
+              else{
+                if(int.parse(helper_data_new[j][4]) > int.parse(helper_data_new[i][4])){
+                  List temp =  helper_data_new[j];
+                  helper_data_new[j] = helper_data_new[i];
+                  helper_data_new[i] = temp;
+                }
+              }
+            }
+          }
+        }
+        print(helper_data_new);
+      }
+      else{
+        for(int i=0;i<helper_data_new.length-1;i++){
+          for(int j=i+1;j<helper_data_new.length;j++){
+            if(int.parse(helper_data_new[j][7]) > int.parse(helper_data_new[i][7])){
+              List temp =  helper_data_new[j];
+              helper_data_new[j] = helper_data_new[i];
+              helper_data_new[i] = temp;
+            }
+            else if(int.parse(helper_data_new[j][7]) == int.parse(helper_data_new[i][7])){
+              if(_yearofexp == "Low to High"){
+                if(int.parse(helper_data_new[j][4]) < int.parse(helper_data_new[i][4])){
+                  List temp =  helper_data_new[j];
+                  helper_data_new[j] = helper_data_new[i];
+                  helper_data_new[i] = temp;
+                }
+              }
+              else{
+                if(int.parse(helper_data_new[j][4]) > int.parse(helper_data_new[i][4])){
+                  List temp =  helper_data_new[j];
+                  helper_data_new[j] = helper_data_new[i];
+                  helper_data_new[i] = temp;
+                }
+              }
+            }
+          }
+        }
+        print(helper_data_new);
+      }
+    }
+      else if(_pref == "Experience"){
+        if(_yearofexp == "Low to High"){
+          for(int i=0;i<helper_data_new.length-1;i++){
+            for(int j=i+1;j<helper_data_new.length;j++){
+              if(int.parse(helper_data_new[j][4]) < int.parse(helper_data_new[i][4])){
+                List temp =  helper_data_new[j];
+                helper_data_new[j] = helper_data_new[i];
+                helper_data_new[i] = temp;
+              }
+              else if(int.parse(helper_data_new[j][4]) == int.parse(helper_data_new[i][4])){
+                if(_budget == "Low to High"){
+                  if(int.parse(helper_data_new[j][7]) < int.parse(helper_data_new[i][7])){
+                    List temp =  helper_data_new[j];
+                    helper_data_new[j] = helper_data_new[i];
+                    helper_data_new[i] = temp;
+                  }
+                }
+                else{
+                  if(int.parse(helper_data_new[j][7]) > int.parse(helper_data_new[i][7])){
+                    List temp =  helper_data_new[j];
+                    helper_data_new[j] = helper_data_new[i];
+                    helper_data_new[i] = temp;
+                  }
+                }
+              }
+            }
+          }
+          print(helper_data_new);
+      }
+      else{
+        for(int i=0;i<helper_data_new.length-1;i++){
+            for(int j=i+1;j<helper_data_new.length;j++){
+              if(int.parse(helper_data_new[j][4]) > int.parse(helper_data_new[i][4])){
+                List temp =  helper_data_new[j];
+                helper_data_new[j] = helper_data_new[i];
+                helper_data_new[i] = temp;
+              }
+              else if(int.parse(helper_data_new[j][4]) == int.parse(helper_data_new[i][4])){
+                if(_budget == "Low to High"){
+                  if(int.parse(helper_data_new[j][7]) < int.parse(helper_data_new[i][7])){
+                    List temp =  helper_data_new[j];
+                    helper_data_new[j] = helper_data_new[i];
+                    helper_data_new[i] = temp;
+                  }
+                }
+                else{
+                  if(int.parse(helper_data_new[j][7]) > int.parse(helper_data_new[i][7])){
+                    List temp =  helper_data_new[j];
+                    helper_data_new[j] = helper_data_new[i];
+                    helper_data_new[i] = temp;
+                  }
+                }
+              }
+            }
+          }
+          print(helper_data_new);
+      }
+      }
     print("LEnght of data");
     print(lenData);
+    
       return Scaffold(
         appBar: AppBar(
           title:  Text(
@@ -238,6 +349,7 @@ class _ResultState extends State<Result> {
           actions: [
              FlatButton(
                   onPressed: () => {
+                    // Navigator.pop(context),
                     Navigator.push(context, MaterialPageRoute(builder: (context)=> Filter(auth:widget.auth, category: widget.category))),
                   },
                   padding: EdgeInsets.only(top: size.height*0.006),
@@ -336,21 +448,21 @@ class _ResultState extends State<Result> {
                                         SizedBox(height: 5),
 
                                         Text(
-                                          "Gender: " + helper_data_new[index][3],
-                                          maxLines: 1,
+                                          "Years of Exp: " + helper_data_new[index][4],
                                           style: TextStyle(
                                               fontSize: 15,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w700,
                                               color: Colors.grey),
                                         ),
 
                                         SizedBox(height: 5),
 
                                         Text(
-                                          "Years of Exp: " + helper_data_new[index][4],
+                                          "Salary: Rs. " + helper_data_new[index][7],
+                                          maxLines: 1,
                                           style: TextStyle(
                                               fontSize: 15,
-                                              fontWeight: FontWeight.w700,
+                                              fontWeight: FontWeight.w500,
                                               color: Colors.black),
                                         ),
 

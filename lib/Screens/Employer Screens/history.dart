@@ -73,13 +73,16 @@ class _HistoryState extends State<History> {
                 itemBuilder: (context, index) {
                   return Dismissible(
                     // Show a red background as the item is swiped away.
-                    background: Container(color: Colors.red),
-                    key: Key(helper_data_new[index][1]),
-                    onDismissed: (direction) {
-                      setState(() {
-                        // items.removeAt(index);
-                      });
-
+                    background: Container(
+                      alignment: AlignmentDirectional.centerEnd,
+                      color: Colors.red,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    key: Key(index.toString()),
+                    onDismissed: (direction) async{
                       final snackBar = SnackBar(
                         content: Text(helper_data_new[index][1] +" was removed!"),
                         action: SnackBarAction(
@@ -91,6 +94,38 @@ class _HistoryState extends State<History> {
                       );
 
                       Scaffold.of(context).showSnackBar(snackBar);
+
+                      final user = await widget.auth.currentUser();
+                      print("helper email: " + helper_data_new[index][15]);
+                      FirebaseFirestore.instance
+                          .collection('employer')
+                          .doc(user)
+                          .collection('history')
+                          .doc(helper_data_new[index][15])
+                          .delete()
+                          .then((value) => print("User Deleted"))
+                          .catchError((error) => print("Failed to delete user: $error"));
+
+                      setState(() {
+                        // helper_data_new.removeWhere((key, value) => key == helper_data_new[index]);
+                        helper_data_new.remove(index);
+                        helper_data_new.forEach((key,value){
+                          if(key>index){
+                            var value = helper_data_new[key];
+                            int x = key;
+                            helper_data_new.remove(key);
+                            helper_data_new[x-1] = value;
+                          }
+                        });
+                        print("Naya wala ");
+                        print(helper_data_new);
+                        lenData = lenData - 1;
+                        if(lenData == 0){
+                          flag = true;
+                          isLoading = false;
+                        }
+                      });
+                      
                     },
                     child: Column(
                       children: [
@@ -245,7 +280,7 @@ class _HistoryState extends State<History> {
           helper_data[i] = [doc['photo'], doc['name'], doc['age'], doc['gender'], 
                             doc['years of experience'], doc['address'], doc['duration'], 
                             doc['exp salary'], doc['religion'], doc['marital status'], 
-                            doc['language'], doc['category'], doc['contact no'], doc['city'], doc['state']];
+                            doc['language'], doc['category'], doc['contact no'], doc['city'], doc['state'], doc.id.toString()];
           i = i+1;
           print("event docs k andar ka helper data");
           print(helper_data);
@@ -257,6 +292,7 @@ class _HistoryState extends State<History> {
             else{
               isLoading = true;
             }
+            
           });
         });
     });

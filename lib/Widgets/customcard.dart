@@ -66,7 +66,7 @@ class CustomCard extends StatelessWidget {
             ],
           )),
       onTap: () async{
-        await getData();
+        // await getData();
         // await getinfo();
         // Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context)=> Result(auth:auth, category: category)));
@@ -74,39 +74,39 @@ class CustomCard extends StatelessWidget {
     );
   }
   
-  Future<void> getData() async {
-    final user = await auth.currentUser();
-    print(user);
+  // Future<void> getData() async {
+  //   final user = await auth.currentUser();
+  //   print(user);
     
-    FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
-    .snapshots().listen((data)  {
-      _city = data.docs[0]['city'];
-      _state = data.docs[0]['state'];
-      print('City: $_city');
-      print('State: $_state');
-      setData(category,_city,_state);
-    }
+  //   FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: user)
+  //   .snapshots().listen((data)  {
+  //     _city = data.docs[0]['city'];
+  //     _state = data.docs[0]['state'];
+  //     print('City: $_city');
+  //     print('State: $_state');
+  //     setData(category,_city,_state);
+  //   }
     
-    );
-  }
+  //   );
+  // }
 
-  Future<void> setData(String category, String _city, String _state) async {
-    print("set data me city"+_city);
-    try{
-      final user = await auth.currentUser();
-      print(user);
-      await FirebaseFirestore.instance
-        .collection('employer')
-        .doc(user)
-        .collection('filter')
-        .doc(category)
-        .set(
-        {'city': _city,'state': _state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category});
-    }
-    catch(e){
-      print("Error: " + e);
-    }
+  // Future<void> setData(String category, String _city, String _state) async {
+  //   print("set data me city"+_city);
+  //   try{
+  //     final user = await auth.currentUser();
+  //     print(user);
+  //     await FirebaseFirestore.instance
+  //       .collection('employer')
+  //       .doc(user)
+  //       .collection('filter')
+  //       .doc(category)
+  //       .set(
+  //       {'city': _city,'state': _state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category, 'pref':'Salary'});
+  //   }
+  //   catch(e){
+  //     print("Error: " + e);
+  //   }
     
-  }
+  // }
 }
   

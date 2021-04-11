@@ -19,24 +19,34 @@ class Filter extends StatefulWidget {
 
 class _FilterState extends State<Filter> {
 
-  List _gender,_duration,_religion, _autoreligion;
-  String _genderResult, _durationResult, _religionResult, _budget, _autocity, _autostate, _yoe, _city, _state;
+  List _gender,_duration,_religion, _autoreligion, _autoduration, _autogender;
+  String _genderResult, _durationResult, _religionResult, _budget, _autocity, _autostate, _yoe, _city, _state, _pref = "Salary";
   final formKey = new GlobalKey<FormState>();
   TextEditingController _statecontroller; 
   TextEditingController _citycontroller; 
 
   @override
   void initState() {
-    super.initState();
-    _gender = ['Male', 'Female', 'Transgender'];
+    _autoreligion = [];
+    _autoduration = [];
+    _autogender = [];
+    // _gender = ['Male', 'Female', 'Transgender'];
     _genderResult = '';
-    _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
+    // _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
     _durationResult = '';
-    _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
+    // _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
     _religionResult = '';
-    _budget = "Low to High";
-    _yoe = "High to Low";
+    // _budget = "Low to High";
+    // _yoe = "High to Low";
     autofill();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _citycontroller.dispose();
+    _statecontroller.dispose();
+    super.dispose();
   }
 
   Future<void> autofill() async{
@@ -49,10 +59,21 @@ class _FilterState extends State<Filter> {
           setState(() {
             _autocity = data.docs[0]['city'];
             _autostate = data.docs[0]['state'];
-            _autoreligion = data.docs[0]['religion'];
+            _religion = data.docs[0]['religion'];
+            _duration = data.docs[0]['duration'];
+            _gender = data.docs[0]['gender'];
+            _budget = data.docs[0]['budget'];
+            _yoe = data.docs[0]['yearofexp'];
+            _pref = data.docs[0]['pref'];
             print('autofill City: $_autocity');
             print('autofill State: $_autostate');
-            print('autofill Religion: $_autoreligion');
+            print('autofill Religion: $_religion');
+            print('autofill Duration: $_duration');
+            print('autofill Gender: $_gender');
+            print('autofill budget: $_budget');
+            print('autofill yoe: $_yoe');
+            print('autofill pref: $_pref');
+            // print(_religion.runtimeType);
             _citycontroller = TextEditingController(text: _autocity);
             _statecontroller = TextEditingController(text: _autostate);
           });
@@ -64,35 +85,9 @@ class _FilterState extends State<Filter> {
     }
   }
 
-  _saveForm() {
-    var form = formKey.currentState;
-    if (form.validate()) {
-      setState(() {
-        if(_gender.isEmpty){
-          _gender = ['Male', 'Female', 'Transgender'];
-        }
-        if(_religion.isEmpty){
-          _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
-        }
-        if(_duration.isEmpty){
-          _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
-        }
-      });
-      
-      form.save();
-      // setState(() {
-      //   _genderResult = _gender;
-      //   _durationResult = _duration.toString();
-      //   _religionResult = _religion.toString();
-      // });
-      setfilter();
-      
-    }
-  }
-
   Future<void> getresults() async{
     try{
-      final user = await widget.auth.currentUser();
+      // final user = await widget.auth.currentUser();
       FirebaseFirestore.instance
       .collection('helper')
       .where('city', isEqualTo: _citycontroller.text)
@@ -108,8 +103,6 @@ class _FilterState extends State<Filter> {
           .where('religion', whereIn : _religion)
           .where('gender', whereIn: _gender)
           .where('duration', whereIn: _duration);
-          
-          
         });
       });
     }
@@ -118,7 +111,7 @@ class _FilterState extends State<Filter> {
     }
   }
 
-  Future<void> setfilter() async{
+  Future<void> setfilter(BuildContext context) async{
     try{
         final user = await widget.auth.currentUser();
         print(user); 
@@ -135,7 +128,9 @@ class _FilterState extends State<Filter> {
           'gender': _gender,
           'budget': _budget,
           'yearofexp': _yoe,
+          'pref': _pref,
         });
+        Navigator.pop(context);
         Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context)=> Result(auth: widget.auth, category: widget.category)));
     }
@@ -144,6 +139,7 @@ class _FilterState extends State<Filter> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -278,11 +274,17 @@ class _FilterState extends State<Filter> {
                     valueField: 'value',
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
-                    hintWidget: Text('Please choose one or more'),
-                    initialValue: _autoreligion,
+                    // hintWidget: Text('Please choose one or more'),
+                    
+                    initialValue: _religion,
                     onSaved: (value) {
-                      if (value == null) return;
+                      // print(value);
+                      if (value == null || value.length == 0){
+                          value = ['Hindu', 'Muslim', 'Christian', 'Others'];
+                      }
                       setState(() {
+                        print("SET STATE KA RELIGIONNNNNNN"); 
+                        print(_religion);
                         _religion = value;
                       });
                     },
@@ -333,10 +335,12 @@ class _FilterState extends State<Filter> {
                     valueField: 'value',
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
-                    hintWidget: Text('Please choose one or more'),
+                    // hintWidget: Text('Please choose one or more'),
                     initialValue: _duration,
                     onSaved: (value) {
-                      if (value == null) return;
+                      if (value == null || value.length == 0){
+                          value = ['Less than 2', '2-4', '4-6', 'More than 6'];
+                      }
                       setState(() {
                         _duration = value;
                       });
@@ -387,12 +391,12 @@ class _FilterState extends State<Filter> {
                     valueField: 'value',
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
-                    hintWidget: Text('Please choose one or more'),
+                    // hintWidget: Text('Please choose one or more'),
                     initialValue: _gender,
                     onSaved: (value) {
-                      if (value == null){
+                      if (value == null || value.length == 0){
                           // if(_gender.isEmpty){
-                          _gender = ['Male', 'Female', 'Transgender'];
+                          value = ['Male', 'Female', 'Transgender'];
                           // }
                       }
                       setState(() {
@@ -450,22 +454,7 @@ class _FilterState extends State<Filter> {
                             Text(
                               'High to Low',
                             ), 
-                            // Expanded(
-                            //   child: ListTile(  
-                            //     title: Text('High to Low'),  
-                            //     leading: 
-                            //     Radio(  
-                            //       activeColor: kPrimaryColor,
-                            //       value: "High to Low",  
-                            //       groupValue: _budget,  
-                            //       onChanged: (String value) {  
-                            //         setState(() {  
-                            //           _budget = value;  
-                            //         });  
-                            //       },  
-                            //     ),  
-                            //   ),
-                            // ),  
+                           
                           ],  
                         ),
                       ],
@@ -517,29 +506,65 @@ class _FilterState extends State<Filter> {
                             Text(
                               'High to Low',
                             ), 
-                            // Expanded(
-                            //   child: ListTile(  
-                            //     title: Text('High to Low'),  
-                            //     leading: 
-                            //     Radio(  
-                            //       activeColor: kPrimaryColor,
-                            //       value: "High to Low",  
-                            //       groupValue: _budget,  
-                            //       onChanged: (String value) {  
-                            //         setState(() {  
-                            //           _budget = value;  
-                            //         });  
-                            //       },  
-                            //     ),  
-                            //   ),
-                            // ),  
+                            
                           ],  
                         ),
                       ],
                     ),
                   ),
                   
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    width: size.width * 0.93,
+                    height: size.height * 0.112,
+                    decoration: BoxDecoration(
+                      color: kPrimaryLightColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Select your main preference",style: TextStyle(fontSize: 16),),
+                        Row(  
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        
+                          children: <Widget>[
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "Experience",  
+                              groupValue: _pref,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _pref = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              "Experience",
+                            ),
 
+                            Radio(
+                              activeColor: kPrimaryColor,
+                              value: "Expected Salary",  
+                              groupValue: _pref,  
+                              onChanged: (String value) {  
+                                setState(() {  
+                                  _pref = value;  
+                                });  
+                              },  
+                            ),
+                            Text(
+                              'Expected Salary',
+                            ), 
+                            
+                          ],  
+                        ),
+                      ],
+                    ),
+                  ),
                 // Container(
                 //   padding: EdgeInsets.all(8),
                 //   child: RaisedButton(
@@ -548,18 +573,41 @@ class _FilterState extends State<Filter> {
                 //   ),
                 // ),
                 Container(
-                  color: kPrimaryColor,
+                  // color: kPrimaryColor,
                   margin: EdgeInsets.symmetric(vertical: 10),
-                  width: size.width * 0.5,
+                  width: size.width * 0.4,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(29),
                     child: FlatButton(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                       color: kPrimaryColor,
-                      onPressed: _saveForm,
+                      onPressed: (){
+                        var form = formKey.currentState;
+                        if (form.validate()) {
+                          setState(() {
+                            if(_gender.isEmpty){
+                              _gender = ['Male', 'Female', 'Transgender'];
+                            }
+                            if(_religion.isEmpty){
+                              _religion = ['Hindu', 'Muslim', 'Christian', 'Others'];
+                            }
+                            if(_duration.isEmpty){
+                              _duration = ['Less than 2', '2-4', '4-6', 'More than 6'];
+                            }
+                          });
+                          
+                          form.save();
+                          // setState(() {
+                          //   _genderResult = _gender;
+                          //   _durationResult = _duration.toString();
+                          //   _religionResult = _religion.toString();
+                          // });
+                          setfilter(context);
+                        }
+                      },
                       child: Text(
                         "Save",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
                       ),
                     ),
                   ),
@@ -584,4 +632,7 @@ class _FilterState extends State<Filter> {
       ) 
     );
   }
+
+  
+
 }
