@@ -109,7 +109,8 @@ class _HistoryState extends State<History> {
                       setState(() {
                         // helper_data_new.removeWhere((key, value) => key == helper_data_new[index]);
                         helper_data_new.remove(index);
-                        helper_data_new.forEach((key,value){
+                        if(helper_data_new.length!=0){
+                          helper_data_new.forEach((key,value){
                           if(key>index){
                             var value = helper_data_new[key];
                             int x = key;
@@ -117,10 +118,14 @@ class _HistoryState extends State<History> {
                             helper_data_new[x-1] = value;
                           }
                         });
+                        }
                         print("Naya wala ");
                         print(helper_data_new);
+                        print("Lendata");
+                        print(lenData);
                         lenData = lenData - 1;
                         if(lenData == 0){
+                          print("Ismai aaya");
                           flag = true;
                           isLoading = false;
                         }
