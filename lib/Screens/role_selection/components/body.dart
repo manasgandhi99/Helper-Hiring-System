@@ -86,18 +86,18 @@ class _BodyState extends State<Body> {
                         onPressed: ()async{
                         // SharedPreferences prefs = await SharedPreferences.getInstance();
                         // prefs.setBool("pref"+ widget.email, true);
-                        setData('house_help');
-                        setData('office_help');
-                        setData('babysitting');
-                        setData('patient_care');
-                        setData('cook');
-                        setData('elderly_care');
                         print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
                         String useruid = await userCreation(context);
                         print("apna Userid: "+ useruid);
                         if(useruid != "Error while Registering User!!"){
                           fileurl = await uploadFiles(widget.file);
                           store();
+                          await setData('house_help');
+                          await setData('office_help');
+                          await setData('babysitting');
+                          await setData('patient_care');
+                          await setData('cook');
+                          await setData('elderly_care');
                           Navigator.pop(context);
                           Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
                         }
@@ -193,18 +193,16 @@ class _BodyState extends State<Body> {
   Future<void> setData(String category) async {
     print("set data me city"+widget.city);
     try{
-      final user = await widget.auth.currentUser();
-      print(user);
       await FirebaseFirestore.instance
         .collection('employer')
-        .doc(user)
+        .doc(widget.email)
         .collection('filter')
         .doc(category)
         .set(
         {'city': widget.city,'state': widget.state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category, 'pref':'Salary'});
     }
     catch(e){
-      print("Error: " + e);
+      print("Error: " + e.toString());
     }
     
   }
