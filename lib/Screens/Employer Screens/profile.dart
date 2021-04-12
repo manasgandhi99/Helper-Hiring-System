@@ -597,6 +597,13 @@ class _ProfileState extends State<Profile> {
       final user = await widget.auth.currentUser();
       print(user);
 
+      await setData('house_help', _city, _state);
+      await setData('office_help', _city, _state);
+      await setData('patient_care', _city, _state);
+      await setData('cook', _city, _state);
+      await setData('babysitting', _city, _state);
+      await setData('elderly_care', _city, _state);
+
       await FirebaseFirestore.instance
         .collection('employer')
         .doc(user)
@@ -615,6 +622,23 @@ class _ProfileState extends State<Profile> {
     }
     catch(e){
       print("Error: " + e);
+    }
+    
+  }
+
+  Future<void> setData(String category, String _newcity, String _newstate) async {
+    try{
+      final user = await widget.auth.currentUser();
+      await FirebaseFirestore.instance
+        .collection('employer')
+        .doc(user)
+        .collection('filter')
+        .doc(category)
+        .update(
+        {'city': _newcity,'state': _newstate});
+    }
+    catch(e){
+      print("Error: " + e.toString());
     }
     
   }
