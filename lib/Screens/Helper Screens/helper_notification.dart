@@ -59,7 +59,7 @@ class _HelperNotificationState extends State<HelperNotification> {
       ),
       body: flag ? 
       Center(
-        child: Text("No Contacts in History",style: TextStyle(fontSize: 20),),
+        child: Text("No Notifications",style: TextStyle(fontSize: 20),),
       ):
       isLoading ? 
       progressIndicator():
@@ -71,12 +71,19 @@ class _HelperNotificationState extends State<HelperNotification> {
                 itemBuilder: (context, index) {
                   return Dismissible(
                     // Show a red background as the item is swiped away.
-                    background: Container(color: Colors.red),
-                    key: Key(employer_data_new[index][1]),
-                    onDismissed: (direction) {
-                      setState(() {
-                        // items.removeAt(index);
-                      });
+                    background: Container(
+                      alignment: AlignmentDirectional.centerEnd,
+                      color: Colors.red,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    key: Key(employer_data_new[index][5]),
+                    onDismissed: (direction) async{
+                      // setState(() {
+                      //   // items.removeAt(index);
+                      // });
 
                       final snackBar = SnackBar(
                         content: Text(employer_data_new[index][1] +" was removed!"),
@@ -89,6 +96,42 @@ class _HelperNotificationState extends State<HelperNotification> {
                       );
 
                       Scaffold.of(context).showSnackBar(snackBar);
+
+                      final user = await widget.auth.currentUser();
+                      print("employer email: " + employer_data_new[index][5]);
+                      FirebaseFirestore.instance
+                          .collection('helper')
+                          .doc(user)
+                          .collection('notification')
+                          .doc(employer_data_new[index][5])
+                          .delete()
+                          .then((value) => print("User Deleted"))
+                          .catchError((error) => print("Failed to delete user: $error"));
+
+                      setState(() {
+                        // employer_data_new.removeWhere((key, value) => key == employer_data_new[index]);
+                        employer_data_new.remove(index);
+                        if(employer_data_new.length!=0){
+                          employer_data_new.forEach((key,value){
+                          if(key>index){
+                            var value = employer_data_new[key];
+                            int x = key;
+                            employer_data_new.remove(key);
+                            employer_data_new[x-1] = value;
+                          }
+                        });
+                        }
+                        print("Naya wala ");
+                        print(employer_data_new);
+                        print("Lendata");
+                        print(lenData);
+                        lenData = lenData - 1;
+                        if(lenData == 0){
+                          print("Ismai aaya");
+                          flag = true;
+                          isLoading = false;
+                        }
+                      });
                     },
                     child: Column(
                       children: [
@@ -248,7 +291,7 @@ class _HelperNotificationState extends State<HelperNotification> {
         data.docs.forEach((doc) {
           print("i ka value: ");
           print(i);
-          employer_data[i] = [doc['photo'], doc['name'], doc['city'], doc['state'],doc['contact no']];
+          employer_data[i] = [doc['photo'], doc['name'], doc['city'], doc['state'],doc['contact no'], doc.id.toString()];
           i = i+1;
           print("event docs k andar ka helper data");
           print(employer_data);

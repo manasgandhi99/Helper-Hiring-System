@@ -64,7 +64,12 @@ class _HelperHomeState extends State<HelperHome> {
               ),
             title: message['notification']['title'],
             desc:  message['notification']['body'],
-            btnOkOnPress: () {},
+            btnOkOnPress: () {
+              setState((){
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> HelperHome(auth: widget.auth, onSignedOut: widget.onSignedOut,)));
+              });
+            },
             )..show();
         },
         onLaunch: (Map<String, dynamic> message) async {
