@@ -199,7 +199,7 @@ class _BodyState extends State<Body> {
         .collection('filter')
         .doc(category)
         .set(
-        {'city': widget.city,'state': widget.state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category, 'pref':'Salary'});
+        {'city': widget.city,'state': widget.state, 'religion': ["Hindu","Muslim","Christian","Others"],'duration': ["Less than 2","2-4","4-6","More than 6"], 'gender': ["Male","Female","Transgender"], 'budget': "Low to High", 'yearofexp': "High to Low", 'category':category, 'pref':'Expected Salary'});
     }
     catch(e){
       print("Error: " + e.toString());

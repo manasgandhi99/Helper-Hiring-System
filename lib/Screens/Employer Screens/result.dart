@@ -32,6 +32,7 @@ class _ResultState extends State<Result> {
   bool isLoading = true, budgetorder = false, yearofexporder = true;
   String categoryName = "", _budget = "", _yearofexp = "", _pref="";
   List _gender =[], _religion = [], _duration = [];
+  int ruka = 0;
 
   @override
   void initState() {
@@ -92,7 +93,7 @@ class _ResultState extends State<Result> {
     // print(user);
     // await batch.commit();
     
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('helper')
         .where('city', isEqualTo: infoCity)
         .where('state', isEqualTo: infoState)
@@ -109,14 +110,13 @@ class _ResultState extends State<Result> {
 
           print("Flag: "+flag.toString());
           print(lenData);
-
           i = 0;
           j = 0;
           data.docs.forEach((result) async {
             print("Data.docs k andar aaya!!");
             print(result.data());
 
-            FirebaseFirestore.instance
+            await FirebaseFirestore.instance
                 .collection('helper')
                 .doc(result['email'])
                 .collection('profile')
@@ -162,6 +162,7 @@ class _ResultState extends State<Result> {
                           // print("set state ka items");
                           // print(helper_data_new);
                           if(j == lenData){
+                            ruka=1;
                             isLoading = false;
                           }
                           else{
@@ -204,12 +205,17 @@ class _ResultState extends State<Result> {
     print(j);
     print("build ka helper data");
     print(helper_data_new);
-    // if(helper_data_new.length == 0){
-    //   setState(() {
-    //     flag = true;
-    //     isLoading = false;
-    //   });                        
-    // }
+    print("Ruka:"+ruka.toString());
+    if(ruka==1){
+      if(helper_data_new.length == 0){
+        print("Malum pada flag true hai");
+        setState(() {
+          flag = true;
+          isLoading = false;
+        });                        
+      }
+    }
+    
     if(_pref == "Expected Salary"){
       if(_budget == "Low to High"){
         for(int i=0;i<helper_data_new.length-1;i++){
