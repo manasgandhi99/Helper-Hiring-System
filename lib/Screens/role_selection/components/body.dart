@@ -1,3 +1,4 @@
+import 'package:Helper_Hiring_System/Screens/VideoVerification/pickvideo.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:Helper_Hiring_System/Screens/Login/login_screen.dart';
@@ -99,7 +100,8 @@ class _BodyState extends State<Body> {
                           await setData('cook');
                           await setData('elderly_care');
                           Navigator.pop(context);
-                          Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                          // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'employer')));
                         }
                         else{
                           print('ERROR');
@@ -135,7 +137,8 @@ class _BodyState extends State<Body> {
                             fileurl = await uploadFiles(widget.file);
                             helperstore();
                             Navigator.pop(context);
-                            Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+                            // Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
                           }
                           else{
                             print('ERROR');
