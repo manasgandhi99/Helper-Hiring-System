@@ -10,7 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class PickVideo extends StatefulWidget {
   final BaseAuth auth;
   final String email;
-  final File file;
+  final String file;
   final String role;
   PickVideo({this.auth, this.email, this.file, this.role});
   @override

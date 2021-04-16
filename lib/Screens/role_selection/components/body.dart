@@ -33,7 +33,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   String fileurl;
-
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -101,7 +101,7 @@ class _BodyState extends State<Body> {
                           await setData('elderly_care');
                           Navigator.pop(context);
                           // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'employer')));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'employer')));
                         }
                         else{
                           print('ERROR');
@@ -138,7 +138,7 @@ class _BodyState extends State<Body> {
                             helperstore();
                             Navigator.pop(context);
                             // Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'helper')));
                           }
                           else{
                             print('ERROR');
@@ -269,10 +269,11 @@ class _BodyState extends State<Body> {
   }
 
   Future<String> uploadFiles(File _image) async {
+    final String user = _firebaseAuth.currentUser.uid ;
     String imageUrl;
     print("Upload docs wala user\n");
-    print(widget.email);
-    String imageRef = widget.email + '/' + _image.path.split('/').last;
+    print("user ka uid: "+user);
+    String imageRef = user + '/' + "Furr.jpg";
     print(imageRef);
     // await FirebaseStorage.instance.ref(imageRef).putFile(_image);
 

@@ -28,7 +28,7 @@ class Framer extends StatefulWidget {
   final String path;
   final String email;
   final String role;
-  final File file;
+  final String file;
   @override
   _FramerState createState() => _FramerState();
 }
@@ -36,9 +36,11 @@ class Framer extends StatefulWidget {
 class _FramerState extends State<Framer> {
   // final picker = ImagePicker();
   // final user = FirebaseAuth.instance.currentUser;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   var _isClean = false;
   var flag = false;
   List<String> uploadedURLs = [];
+  String nav = "false";
 
 // static Future<bool> saveImage(File file, String albumName,{String waterMark,Alignment alignment,double scale}) async {
 //     Map<String,dynamic> para = {"filePath":file.path,"albumName":albumName};
@@ -78,35 +80,47 @@ class _FramerState extends State<Framer> {
   //   });
   //   return imagesUrls;
   // }
-  void getResponse(List<String> imageList, BuildContext context) async {
+  void getResponse(List<String> imageList) async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = "https://66ddb923c70b.ngrok.io/home?doc=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2FFurrr.jpg?alt=media&token=1f8c10b3-6b71-4c99-939b-7fa290509fda&frame1=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai1.png?alt=media&token=97a170f5-93df-4367-9492-ab857dee1c47&frame2=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai2.png?alt=media&token=eb6281b6-e523-4c14-9f18-cfd759ff8e7e&frame3=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai3.png?alt=media&token=a2363af5-9d30-45f5-b93a-b16d54b4894e";  
-
+    var url = "https://29d8295bd8df.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
+    print("Final url: "+url);
         // Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
         // https://2eab1c6ed332.ngrok.io/home?doc=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2FFurrr.jpg?alt=media&token=1f8c10b3-6b71-4c99-939b-7fa290509fda&frame1=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai1.png?alt=media&token=97a170f5-93df-4367-9492-ab857dee1c47&frame2=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai2.png?alt=media&token=eb6281b6-e523-4c14-9f18-cfd759ff8e7e&frame3=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai3.png?alt=media&token=a2363af5-9d30-45f5-b93a-b16d54b4894e
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
+    print("Ruk zara ho raha hai !!");
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       var value = jsonResponse['value'];
       print('Value: $value.');
       if(value==1){
-        if(widget.role=='employer'){
-          Navigator.pop(context);
-          Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-        }else{
-          Navigator.pop(context);
-          Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
-        }
+        print("Verification Successfull");
+        setState(() {
+          nav="true";
+        });
+        // if(widget.role=='employer'){
+        //   Navigator.pop(context);
+        //   Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+        // }else{
+        //   Navigator.pop(context);
+        //   Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+        // }
       }
       else{
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
+        print("Verification failed");
+        setState(() {
+          nav="wrong";
+        });
+        // Navigator.pop(context);
+        // Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
+      setState(() {
+        nav="wrong";
+      });
     }
   }
 
@@ -127,10 +141,12 @@ class _FramerState extends State<Framer> {
     print("Video path from get Images" + widget.path);
     var images = await ExportVideoFrame.exportImage(widget.path, 4, 0.5);
     print("export image done");
+    final String user = _firebaseAuth.currentUser.uid ;
+    print("user ka uid"+user);
     for(int i=0; i<3; i++){
       // File imageFile = imageList[0];
       // String videoRef = widget.email + '/' + "frames" + '/' + images[i].toString();
-      String videoRef = widget.email + '/' + "image" + "$i";
+      String videoRef =  user + '/' + "image" + "$i";
       print("Video Reference: " + videoRef);
       // await FirebaseStorage.instance.ref(videoRef).putFile(images[i]);
       String imageUrl = await (await FirebaseStorage.instance.ref(videoRef).putFile(images[i])).ref.getDownloadURL();
@@ -144,7 +160,7 @@ class _FramerState extends State<Framer> {
       widget.images.addAll(result);
       _isClean = true;
       //* Get Response call
-      // getResponse(uploadedURLs, context);
+      getResponse(uploadedURLs);
     });
     // print(result[0]);
     // List<String> uploadedImages = await uploadFiles(images);
@@ -177,6 +193,20 @@ class _FramerState extends State<Framer> {
 
   @override
   Widget build(BuildContext context) {
+    if(nav=="true"){
+      if(widget.role=="employer"){
+        Navigator.pop(context);
+        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+      }
+      else{
+        Navigator.pop(context);
+        Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+      }
+    }
+    else if(nav=="wrong"){
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
+    }
     print("widget images length: ");
     // _handleClickFirst(context);
     print(widget.images.length);
