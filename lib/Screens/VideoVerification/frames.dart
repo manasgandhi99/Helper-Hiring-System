@@ -2,7 +2,9 @@ import 'package:Helper_Hiring_System/Screens/Helper%20Screens/profile_creation.d
 import 'package:Helper_Hiring_System/Screens/VideoVerification/pickvideo.dart';
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:Helper_Hiring_System/root_page.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:export_video_frame/export_video_frame.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+
+import '../../constants.dart';
 
 class ImageItem extends StatelessWidget {
   // displays images extracted from a video
@@ -83,14 +87,14 @@ class _FramerState extends State<Framer> {
   void getResponse(List<String> imageList) async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = "https://29d8295bd8df.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
-    print("Final url: "+url);
+    var url = "http://9f04a59a4b99.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
+    print("Final url: " + url);
         // Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
         // https://2eab1c6ed332.ngrok.io/home?doc=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2FFurrr.jpg?alt=media&token=1f8c10b3-6b71-4c99-939b-7fa290509fda&frame1=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai1.png?alt=media&token=97a170f5-93df-4367-9492-ab857dee1c47&frame2=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai2.png?alt=media&token=eb6281b6-e523-4c14-9f18-cfd759ff8e7e&frame3=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai3.png?alt=media&token=a2363af5-9d30-45f5-b93a-b16d54b4894e
 
     // Await the http get response, then decode the json-formatted response.
-    var response = await http.get(url);
     print("Ruk zara ho raha hai !!");
+    var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       var value = jsonResponse['value'];
@@ -193,73 +197,226 @@ class _FramerState extends State<Framer> {
 
   @override
   Widget build(BuildContext context) {
-    if(nav=="true"){
-      if(widget.role=="employer"){
-        Navigator.pop(context);
-        Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-      }
-      else{
-        Navigator.pop(context);
-        Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
-      }
-    }
-    else if(nav=="wrong"){
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: 'helper')));
-    }
+    // if(nav=="true"){
+    //   if(widget.role=="employer"){
+    //     // Navigator.pop(context);
+    //     Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+    //   }
+    //   else{
+    //     // Navigator.pop(context);
+    //     Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+    //   }
+    // }
+    // else if(nav=="wrong"){
+    //   AwesomeDialog(
+    //     context: context,
+    //     animType: AnimType.LEFTSLIDE,
+    //     headerAnimationLoop: false,
+    //     dialogType: DialogType.ERROR,
+    //     title: 'Error',
+    //     desc: 'Verification Failed! Please try again.',
+    //     btnOkOnPress: () {
+    //       // Navigator.pop(context);
+    //       Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: widget.role)));
+    //     },
+        
+    //     // btnCancelOnPress: () {},
+    //     btnOkIcon: Icons.check_circle,
+    //     btnCancelIcon: Icons.cancel,
+    //     onDissmissCallback: () {
+    //       debugPrint('Dialog Dismiss from callback');
+    //     })
+    //   ..show();
+      
+    // }
+    Size size = MediaQuery.of(context).size;
     print("widget images length: ");
-    // _handleClickFirst(context);
     print(widget.images.length);
     return Scaffold(
-      body: Column(
-        children: [
-          widget.images.length > 2
-            ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                    heightFactor: MediaQuery.of(context).size.height / 64,
-                    child: Text('Framing is done')),
-                // RaisedButton(
-                //   onPressed: 
-                // ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            
+              nav == "true"
+                 ? widget.role == "employer" ? 
+                  Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0.016, size.width * 0.05, size.height*0.04),
+                        child: Image.asset(
+                              "assets/images/party.png",
+                              height: size.height * 0.40,
+                        ),
+                      ),
 
-              ],
-            )
-            // flag ? 
-            // Column(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [Text('1: Framing is done'), Text('2: Getting Response from Server. Please Wait...')],
-            //     ) : 
-            //     Center(
-            //     heightFactor: MediaQuery.of(context).size.height / 64,
-            //     child: Text('Framing is done'))
-            : Center(
-                heightFactor: MediaQuery.of(context).size.height / 64,
-                // padding: EdgeInsets.all(100),
-                child: Column(
-                  children: [
-                    Text('Please wait while we process your information'),
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                    ),
-                  ],
-                )),
-          // Expanded(
-          //   flex: 1,
-          //   child: GridView.extent(
-          //       maxCrossAxisExtent: 400,
-          //       childAspectRatio: 1.0,
-          //       padding: const EdgeInsets.all(4),
-          //       mainAxisSpacing: 4,
-          //       crossAxisSpacing: 4,
-          //       children: widget.images.length > 0
-          //           ? widget.images
-          //               .map((image) => ImageItem(image: image))
-          //               .toList()
-          //           : [Container()]),
-          // ),
-        ],
+                      SizedBox(height: size.height * 0.035),
+
+                      Text(
+                        "Congrats! Verification Successfull!",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                                ),
+                      ),
+
+                      SizedBox(height: size.height * 0.02),
+
+                      Text(
+                        "Please click on Proceed to explore our application.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                                ),
+                      ),
+
+                      SizedBox(height: size.height * 0.035),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        width: size.width * 0.6,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(29),
+                          child: FlatButton(
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                            color: kPrimaryColor,
+                            onPressed: () {
+                              Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.subdirectory_arrow_right_sharp, color: Colors.white,),
+                                SizedBox(width: size.width*0.03),
+                                Text(
+                                  "Proceed",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ) : 
+                  Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0.016, size.width * 0.05, size.height*0.04),
+                          child: Image.asset(
+                                "assets/images/party.png",
+                                height: size.height * 0.40,
+                          ),
+                        ),
+
+                        SizedBox(height: size.height * 0.035),
+
+                        Text(
+                          "Congrats! Verification Successfull!",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                                  ),
+                        ),
+
+                        SizedBox(height: size.height * 0.02),
+
+                        Text(
+                          "Please click on Proceed to explore our application.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                                  ),
+                        ),
+
+                        SizedBox(height: size.height * 0.035),
+                        
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          width: size.width * 0.6,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(29),
+                            child: FlatButton(
+                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                              color: kPrimaryColor,
+                              onPressed: () {
+                                Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.subdirectory_arrow_right_sharp, color: Colors.white,),
+                                  SizedBox(width: size.width*0.03),
+                                  Text(
+                                    "Proceed",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ) 
+                    :
+                    nav == "wrong"?
+                    (
+                      AwesomeDialog(
+                      context: context,
+                      animType: AnimType.LEFTSLIDE,
+                      headerAnimationLoop: false,
+                      dialogType: DialogType.ERROR,
+                      title: 'Error',
+                      desc: 'Verification Failed! Please try again.',
+                      btnOkOnPress: () {
+                        // Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: widget.role)));
+                      },
+                      
+                      // btnCancelOnPress: () {},
+                      btnOkIcon: Icons.check_circle,
+                      btnCancelIcon: Icons.cancel,
+                      onDissmissCallback: () {
+                        debugPrint('Dialog Dismiss from callback');
+                      })..show()
+                    ) 
+                    :
+                    Center(
+                          heightFactor: MediaQuery.of(context).size.height / 64,
+                          // padding: EdgeInsets.all(100),
+                          child: Column(
+                            children: [
+                              Text('Please wait while we process your information'),
+                              SizedBox(height: size.height * 0.02),
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                              ),
+                            ],
+                          )),
+
+            // Expanded(
+            //   flex: 1,
+            //   child: GridView.extent(
+            //       maxCrossAxisExtent: 400,
+            //       childAspectRatio: 1.0,
+            //       padding: const EdgeInsets.all(4),
+            //       mainAxisSpacing: 4,
+            //       crossAxisSpacing: 4,
+            //       children: widget.images.length > 0
+            //           ? widget.images
+            //               .map((image) => ImageItem(image: image))
+            //               .toList()
+            //           : [Container()]),
+            // ),
+          ],
+        ),
       ),
     );
   }
