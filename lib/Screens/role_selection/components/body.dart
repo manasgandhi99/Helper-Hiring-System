@@ -85,29 +85,65 @@ class _BodyState extends State<Body> {
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: kPrimaryColor,
                         onPressed: ()async{
-                        // SharedPreferences prefs = await SharedPreferences.getInstance();
-                        // prefs.setBool("pref"+ widget.email, true);
-                        print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
-                        String useruid = await userCreation(context);
-                        print("apna Userid: "+ useruid);
-                        if(useruid != "Error while Registering User!!"){
-                          fileurl = await uploadFiles(widget.file);
-                          store();
-                          await setData('house_help');
-                          await setData('office_help');
-                          await setData('babysitting');
-                          await setData('patient_care');
-                          await setData('cook');
-                          await setData('elderly_care');
-                          Navigator.pop(context);
-                          // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'employer')));
-                        }
-                        else{
-                          print('ERROR');
-                          // Navigator.pop(context);
-                          // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
-                        }
+                        
+                        // FutureBuilder(
+                        //     future: mixtureofcalls(context), // the function to get your data from firebase or firestore
+                        //     builder : (BuildContext context, AsyncSnapshot snap){
+                        //       print("snap data" + snap.data.toString());
+                        //         if(snap.data == null){
+                        //             //return loading widget3
+                        //             print("if snap data" + snap.data.toString());
+                        //             return Center(
+                        //               heightFactor: MediaQuery.of(context).size.height / 64,
+                        //               // padding: EdgeInsets.all(100),
+                        //               child: Column(
+                        //                 children: [
+                        //                   Text('Please Wait'),
+                        //                   SizedBox(height: size.height * 0.03),
+                        //                   CircularProgressIndicator(
+                        //                     valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                        //                   ),
+                        //                 ],
+                        //               ));
+                        //         }
+                        //         else{
+                        //           print("else snap data" + snap.data.toString());
+                        //             //return the widget that you want to display after loading
+                        //             if(snap.data=='true'){
+                        //               return PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'employer');
+                        //             }
+                        //             else{
+                        //               print("Snap dataValue: false");
+                        //               return Text("Error Occured!!");
+                                      
+                        //             }
+                        //         } 
+                        //     }
+                        // );
+                        mixtureofcalls(context);
+                        loadingScreen();
+
+                        // print("Employer Store Function Call!!!!!!!!!!!!!!!!!");
+                        // String useruid = await userCreation(context);
+                        // print("apna Userid: "+ useruid);
+                        // if(useruid != "Error while Registering User!!"){
+                        //   fileurl = await uploadFiles(widget.file);
+                        //   store();
+                        //   await setData('house_help');
+                        //   await setData('office_help');
+                        //   await setData('babysitting');
+                        //   await setData('patient_care');
+                        //   await setData('cook');
+                        //   await setData('elderly_care');
+                        //   Navigator.pop(context);
+                        //   // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        //   Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'employer')));
+                        // }
+                        // else{
+                        //   print('ERROR');
+                        //   // Navigator.pop(context);
+                        //   // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+                        // }
                         
                         },
                         child: Text(
@@ -162,6 +198,44 @@ class _BodyState extends State<Body> {
         ),
       ),
     );
+  }
+
+  Widget loadingScreen(){
+    Size size = MediaQuery.of(context).size;
+    return Center(
+      heightFactor: MediaQuery.of(context).size.height / 64,
+      // padding: EdgeInsets.all(100),
+      child: Column(
+        children: [
+          Text('Please Wait'),
+          SizedBox(height: size.height * 0.03),
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+          ),
+        ],
+    ));
+  }
+
+  Future<void> mixtureofcalls (BuildContext context) async{
+    print("Employer mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
+    String useruid = await userCreation(context);
+    print("apna Userid: "+ useruid);
+    if(useruid != "Error while Registering User!!"){
+      fileurl = await uploadFiles(widget.file);
+      store();
+      await setData('house_help');
+      await setData('office_help');
+      await setData('babysitting');
+      await setData('patient_care');
+      await setData('cook');
+      await setData('elderly_care');
+      Navigator.pop(context);
+        // Navigator.push(context , MaterialPageRoute(builder: (context) => RootPage(auth :widget.auth)));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: fileurl, role: 'employer')));
+    }
+    else{
+      print("Registration failed");
+    }
   }
 
   showErrorDialog(BuildContext context,String title, String content) {

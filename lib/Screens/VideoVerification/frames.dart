@@ -87,7 +87,7 @@ class _FramerState extends State<Framer> {
   void getResponse(List<String> imageList) async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = "http://9f04a59a4b99.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
+    var url = "https://13383ef2270a.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
     print("Final url: " + url);
         // Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
         // https://2eab1c6ed332.ngrok.io/home?doc=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2FFurrr.jpg?alt=media&token=1f8c10b3-6b71-4c99-939b-7fa290509fda&frame1=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai1.png?alt=media&token=97a170f5-93df-4367-9492-ab857dee1c47&frame2=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai2.png?alt=media&token=eb6281b6-e523-4c14-9f18-cfd759ff8e7e&frame3=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai3.png?alt=media&token=a2363af5-9d30-45f5-b93a-b16d54b4894e
@@ -367,26 +367,92 @@ class _FramerState extends State<Framer> {
                     ) 
                     :
                     nav == "wrong"?
-                    (
-                      AwesomeDialog(
-                      context: context,
-                      animType: AnimType.LEFTSLIDE,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.ERROR,
-                      title: 'Error',
-                      desc: 'Verification Failed! Please try again.',
-                      btnOkOnPress: () {
-                        // Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: widget.role)));
-                      },
-                      
-                      // btnCancelOnPress: () {},
-                      btnOkIcon: Icons.check_circle,
-                      btnCancelIcon: Icons.cancel,
-                      onDissmissCallback: () {
-                        debugPrint('Dialog Dismiss from callback');
-                      })..show()
+                    Column(
+                      mainAxisAlignment:  MainAxisAlignment.center,
+                      children: [
+                        // Container(
+                        //   padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0.016, size.width * 0.05, size.height*0.04),
+                        //   child: Image.asset(
+                        //         "assets/images/party.png",
+                        //         height: size.height * 0.40,
+                        //   ),
+                        // ),
+
+                        // SizedBox(height: size.height * 0.035),
+
+                        Text(
+                          "Error! Failure in Verification!",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                                  ),
+                        ),
+
+                        SizedBox(height: size.height * 0.02),
+
+                        Text(
+                          "Please record a clear video of your face again.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                                  ),
+                        ),
+
+                        SizedBox(height: size.height * 0.035),
+                        
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          width: size.width * 0.6,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(29),
+                            child: FlatButton(
+                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                              color: kPrimaryColor,
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: widget.role)));
+                                // Navigator.push(context , MaterialPageRoute(builder: (context) => ProfileCreation(auth :widget.auth)));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Icon(Icons.subdirectory_arrow_right_sharp, color: Colors.white,),
+                                  SizedBox(width: size.width*0.03),
+                                  Text(
+                                    "Record Again",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ) 
+                    // (
+                    //   AwesomeDialog(
+                    //   context: context,
+                    //   animType: AnimType.LEFTSLIDE,
+                    //   headerAnimationLoop: false,
+                    //   dialogType: DialogType.ERROR,
+                    //   title: 'Error',
+                    //   desc: 'Verification Failed! Please try again.',
+                    //   btnOkOnPress: () {
+                    //     // Navigator.pop(context);
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context)=> PickVideo(auth: widget.auth, email: widget.email ,file: widget.file, role: widget.role)));
+                    //   },
+                      
+                    //   // btnCancelOnPress: () {},
+                    //   btnOkIcon: Icons.check_circle,
+                    //   btnCancelIcon: Icons.cancel,
+                    //   onDissmissCallback: () {
+                    //     debugPrint('Dialog Dismiss from callback');
+                    //   })..show()
+                    // ) 
                     :
                     Center(
                           heightFactor: MediaQuery.of(context).size.height / 64,
