@@ -531,8 +531,8 @@ class _ProfileCreationState extends State<ProfileCreation> {
                             iconEnabledColor:Colors.black,
                             items: <String>[
                               'Less than 2',
-                              '2 - 4',
-                              '4 - 6',
+                              '2-4',
+                              '4-6',
                               'More than 6',
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
