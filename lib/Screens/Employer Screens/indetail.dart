@@ -101,21 +101,6 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
               children: <Widget>[
 
                 SizedBox(height:size.height*0.02),
-
-                // Container(
-                // width: size.width*0.95,
-                // // color: Colors.blue[100],
-                // padding: EdgeInsets.fromLTRB(size.width*0.03,size.width*0.02,size.width*0.03,size.width*0.02),
-                // decoration: BoxDecoration(
-                //   color: kPrimaryLightColor,0
-                  
-                //   border: Border.all(
-                //     color: Colors.black,
-                //     width: 2,
-                //   ),
-                //   borderRadius: BorderRadius.circular(30),
-                // ),
-                // child:
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,7 +281,7 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
   final _ratingDialog = RatingDialog(
     accentColor: Colors.amber,
     title: 'Rate '+widget.helper_data_new[1],
-    description: 'Rate helper '+widget.helper_data_new[1]+" and let others know how satisfied were you with his/her service.",
+    description: 'Rate '+widget.helper_data_new[1]+" and let others know how satisfied were you with his/her service.",
     icon: Image.asset("assets/images/helperApplogo.png",
       height: 100,),
     submitButton: 'Submit',

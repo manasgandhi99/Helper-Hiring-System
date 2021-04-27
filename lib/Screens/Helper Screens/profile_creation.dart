@@ -76,12 +76,12 @@ class _ProfileCreationState extends State<ProfileCreation> {
     await autofill();
   }
   
-  @override
-  void dispose() {
-    _namecontroller.dispose();
-    _contactnocontroller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _namecontroller.dispose();
+  //   _contactnocontroller.dispose();
+  //   super.dispose();
+  // }
   
   final _formKey = GlobalKey<FormState>(); 
 

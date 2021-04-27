@@ -81,10 +81,6 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.notSignedIn:
-        // Navigator.push(context, MaterialPageRoute(builder: (context)=> WelcomeScreen(
-        //   auth: widget.auth,
-        //   onSignedIn: _signedIn,
-        // )));
         print('Welcome Screen');
         return WelcomeScreen(
           auth: widget.auth,
