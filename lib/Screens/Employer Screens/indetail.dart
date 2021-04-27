@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:Helper_Hiring_System/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/constants.dart';
 import 'package:url_launcher/url_launcher.dart'; 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 class InDetail extends StatefulWidget {
   final BaseAuth auth;
@@ -27,16 +29,44 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
   String _contactno = "";
   List <String> userToken = [];
   String employername = "";
+  int sum = 0;
+  int len = 0;
 
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
     super.initState();
+    getdata();
+  }
+
+  Future<void> getdata() async {
+    print("Get data k andar aaya ");
+    await getinfo();
+  }
+
+  Future<void> getinfo() async {
+    await FirebaseFirestore.instance
+    .collection('helper')
+    .doc(widget.helper_data_new[13])
+    .collection('feedback')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+      len = querySnapshot.docs.length;
+      print("Lenght mila: "+len.toString());
+        querySnapshot.docs.forEach((doc) {
+            sum = sum + doc["rating"];
+            print("Sum ki value: "+sum.toString());
+        });
+        setState(() {
+          sum=sum;
+          len=len;
+        });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
+    print("Build mai aa gaya with sum = "+sum.toString()+" and len = "+len.toString());
     Size size = MediaQuery.of(context).size;
     if(widget.helper_data_new[11][0]=='h'){
       category="House Help";
@@ -135,6 +165,38 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                                   color: kPrimaryColor,
                                 ),
                               ),
+                              Row(
+                                children: [
+                                  len==0?Text(
+                                    "0",
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ) :
+                                  Text(
+                                    (sum/len).toString(),
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(Icons.star, color: Colors.amber[700]),
+                                  Text(
+                                    " ("+(len).toString()+" reviews)",
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           )
                         ],
@@ -168,18 +230,18 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                 child: TabBarView(
                   children: [
                     profileDetail(size),
-                    Container(
-                      child: Center(
-                          child:Text("Feedback"),
-                      ),
-                    )
+                    feedbackDetail(size),
+                    // Container(
+                    //   child: Center(
+                    //       child:Text("Feedback"),
+                    //   ),
+                    // )
                   ],
                   controller: _tabController,
                 ),
               ),
 
             SizedBox(height:size.height*0.01),
-              
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 width: size.width * 0.7,
@@ -189,6 +251,8 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                     color: kPrimaryColor,
                     onPressed: () async{
+                      print("Tab Number: ");
+                      print(_tabController.index.toString());
                       sethistorydata();
                       await getemployerdata();
                       await getemployername();
@@ -227,6 +291,42 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
       )
     );
   }
+
+  void _showRatingAppDialog() {
+  final _ratingDialog = RatingDialog(
+    accentColor: Colors.amber,
+    title: 'Rate '+widget.helper_data_new[1],
+    description: 'Rate helper '+widget.helper_data_new[1]+" and let others know how satisfied were you with his/her service.",
+    icon: Image.asset("assets/images/helperApplogo.png",
+      height: 100,),
+    submitButton: 'Submit',
+    onSubmitPressed: (response) async {
+      print('rating: ${response}');
+      final user = await widget.auth.currentUser();
+      FirebaseFirestore.instance
+      .collection('helper')
+      .doc(widget.helper_data_new[13])
+      .collection('feedback')
+      .doc(user)
+      .set({
+        'rating':response
+      });
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: widget.helper_data_new)));
+      // if (response.rating < 3.0) {
+      //   print('response.rating: ${response.rating}');
+      // } else {
+      //   Container();
+      // }
+    },
+  );
+
+  showDialog(
+    context: context,
+    barrierDismissible: true, 
+    builder: (context) => _ratingDialog,
+  );
+}
 
   Future<void> getemployername() async{
     final user = await widget.auth.currentUser();
@@ -366,6 +466,64 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
     catch(e){
       print("Error :" + e.toString());
     }
+  }
+
+  Widget feedbackDetail(Size size) {
+
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+          padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0, size.width * 0.05, size.height*0),
+          child: Image.asset(
+                "assets/images/feedback.png",
+                height: size.height * 0.3,
+          ),
+        ),
+
+        SizedBox(height: size.height * 0.008),
+
+        Text(
+          "Kindly Submit your Feedback.",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+                fontSize: 19.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black
+                  ),
+        ),
+
+        SizedBox(height: size.height * 0.035),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          width: size.width * 0.45,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              color: Colors.amber[700],
+              onPressed: () {
+                _showRatingAppDialog();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.feedback, color: Colors.white,),
+                  SizedBox(width: size.width*0.03),
+                  Text(
+                    "Give Feedback",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        
+      ],
+      ),
+    );
   }
 
   Widget profileDetail(Size size) {
