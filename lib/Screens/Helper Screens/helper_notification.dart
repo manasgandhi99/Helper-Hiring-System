@@ -58,9 +58,33 @@ class _HelperNotificationState extends State<HelperNotification> {
         automaticallyImplyLeading: false,
       ),
       body: flag ? 
-      Center(
-        child: Text("No Notifications",style: TextStyle(fontSize: 20),),
-      ):
+      Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0, size.width * 0.05, size.height*0),
+                          child: Image.asset(
+                                "assets/images/notif.png",
+                                height: size.height * 0.65,
+                          ),
+                        ),
+
+                        // SizedBox(height: size.height * 0.005),
+
+                        Text(
+                          "No Notifications!",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                                fontSize: 27.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                                  ),
+                        ),
+
+                        SizedBox(height: size.height * 0.02),
+
+            
+                      ],
+                    ) :
       isLoading ? 
       progressIndicator():
       Center(

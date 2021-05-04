@@ -57,6 +57,7 @@ class _HelperProfileState extends State<HelperProfile> {
   String _autoreligion = '';
   String _autoexpectedsalary = '';
   String _autolanguages = '';
+  int len=0, sum=0;
   
  
   // String gender;
@@ -87,7 +88,34 @@ class _HelperProfileState extends State<HelperProfile> {
   initState(){
     _c = new TextEditingController();
     autofill();
+    getdata();
     super.initState();
+  }
+
+  Future<void> getdata() async {
+    print("Get data k andar aaya ");
+    await getinfo();
+  }
+
+  Future<void> getinfo() async {
+    final user = await widget.auth.currentUser();
+    await FirebaseFirestore.instance
+    .collection('helper')
+    .doc(user)
+    .collection('feedback')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+      len = querySnapshot.docs.length;
+      print("Lenght mila: "+len.toString());
+        querySnapshot.docs.forEach((doc) {
+            sum = sum + doc["rating"];
+            print("Sum ki value: "+sum.toString());
+        });
+        setState(() {
+          sum=sum;
+          len=len;
+        });
+    });
   }
 
   // Future<void> callAutofill() async{
@@ -250,7 +278,43 @@ class _HelperProfileState extends State<HelperProfile> {
                 ),
               
                 SizedBox(height: size.height * 0.03),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    len==0?Text(
+                      "Rating: 0",
+                      style: TextStyle(
+                        fontFamily: 'SourceSansPro',
+                        fontSize: 16,
+                        letterSpacing: 1.25,
+                        color: Colors.black,
+                      ),
+                    ) :
+                    Text(
+                      "Rating: "+(sum/len).toString(),
+                      style: TextStyle(
+                        fontFamily: 'SourceSansPro',
+                        fontSize: 16,
+                        letterSpacing: 1.25,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Icon(Icons.star, color: Colors.amber[700]),
+                    Text(
+                      " ("+(len).toString()+" reviews)",
+                      style: TextStyle(
+                        fontFamily: 'SourceSansPro',
+                        fontSize: 16,
+                        letterSpacing: 1.25,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
 
+                SizedBox(height: size.height * 0.03),
                 TextFieldContainer(
                   child:TextFormField(
                   controller: _namecontroller,
