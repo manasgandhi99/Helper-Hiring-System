@@ -26,13 +26,14 @@ enum AuthStatus {
 class _RootPageState extends State<RootPage> {
   String role = "";
   AuthStatus authStatus = AuthStatus.notSignedIn;
+  String user ="";
  
   @override
   void initState() {
     super.initState();
     print("Inside init state function");
     widget.auth.currentUser().then((useremail) {
-      
+      user = useremail;
       FirebaseFirestore.instance.collection('employer').where('email', isEqualTo: useremail)
       .snapshots().listen((data)  {
         setState((){
@@ -112,6 +113,7 @@ class _RootPageState extends State<RootPage> {
           return HelperHome(
             auth: widget.auth,
             onSignedOut: _signedOut,
+            user: user,
           );
         }
 

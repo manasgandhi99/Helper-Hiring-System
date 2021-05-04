@@ -382,8 +382,8 @@ class _FilterState extends State<Filter> {
                         "value": "Female",
                       },
                       {
-                        "display": "Transgender",
-                        "value": "Transgender",
+                        "display": "Others",
+                        "value": "Others",
                       },
 
                     ],
@@ -396,7 +396,7 @@ class _FilterState extends State<Filter> {
                     onSaved: (value) {
                       if (value == null || value.length == 0){
                           // if(_gender.isEmpty){
-                          value = ['Male', 'Female', 'Transgender'];
+                          value = ['Male', 'Female', 'Others'];
                           // }
                       }
                       setState(() {

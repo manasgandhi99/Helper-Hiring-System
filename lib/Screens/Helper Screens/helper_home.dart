@@ -15,7 +15,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class HelperHome extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut; 
-  HelperHome({this.auth,this.onSignedOut});
+  final String user;
+  HelperHome({this.auth,this.onSignedOut, this.user});
 
   @override
   _HelperHomeState createState() => _HelperHomeState();
@@ -65,10 +66,10 @@ class _HelperHomeState extends State<HelperHome> {
             title: message['notification']['title'],
             desc:  message['notification']['body'],
             btnOkOnPress: () {
-              setState((){
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> HelperHome(auth: widget.auth, onSignedOut: widget.onSignedOut,)));
-              });
+              // setState((){
+                // Navigator.pop(context);
+                // Navigator.push(context, MaterialPageRoute(builder: (context)=> HelperHome(auth: widget.auth, onSignedOut: widget.onSignedOut,)));
+              // });
             },
             )..show();
         },
@@ -116,7 +117,7 @@ class _HelperHomeState extends State<HelperHome> {
   Widget build(BuildContext context) {
 
     List<Widget> _widgetOptions = [
-      HelperNotification(auth: widget.auth),
+      HelperNotification(auth: widget.auth, user: widget.user,),
       RateCard(),
       HelperProfile(auth: widget.auth, onSignedOut: widget.onSignedOut),
     ];

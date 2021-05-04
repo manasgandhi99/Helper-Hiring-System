@@ -56,8 +56,8 @@ class _BodyState extends State<Body> {
 
               SizedBox(height: size.height * 0.03),
 
-              SvgPicture.asset(
-                "assets/icons/login.svg",
+              Image.asset(
+                "assets/images/my-password.png",
                 height: size.height * 0.35,
               ),
 

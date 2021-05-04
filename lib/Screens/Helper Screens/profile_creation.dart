@@ -18,7 +18,7 @@ import '../../constants.dart';
 
 class ProfileCreation extends StatefulWidget {
   final BaseAuth auth;
-  ProfileCreation({this.auth});
+  ProfileCreation({Key key, this.auth}) : super(key: key);
 
   @override
   _ProfileCreationState createState() => _ProfileCreationState();
@@ -38,7 +38,7 @@ class _ProfileCreationState extends State<ProfileCreation> {
   String _name = '';
   String _contactno = '';
   String _languages = '';
-  String _religion = '';
+  String _religion;
   String _age = '';
   String _password = '';
 
@@ -288,29 +288,80 @@ class _ProfileCreationState extends State<ProfileCreation> {
                   onSaved: (value) => _age = value,
                 ),
                 ),
-                
+
                 TextFieldContainer(
-                  child:TextFormField(
-                  validator: (value){
-                    if(value.isEmpty){
-                      return "Please enter some value";
-                    }
-                    return null;
-                  },
-                  cursorColor: kPrimaryColor,
-                  
-                  decoration: InputDecoration(
-                    icon: Icon(
-                      Icons.group_rounded,
-                      color: kPrimaryColor,
+                  child: Container(
+                    child:Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_search_rounded,
+                          color: kPrimaryColor,
+                        ),
+                        SizedBox(width: size.width*0.04),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            focusColor:Colors.white,
+                            value: _religion,
+                            //elevation: 5,
+                            style: TextStyle(color: Colors.white),
+                            iconEnabledColor:Colors.black,
+                            items: <String>[
+                              'Hindu',
+                              'Muslim',
+                              'Christian',
+                              'Others'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value,style:TextStyle(color: Colors.black),),
+                              );
+                            }).toList(),
+                            hint:Row(
+                              children: <Widget>[
+                                Text(
+                                  "Religion",
+                                  style: TextStyle(
+                                      color: Colors.grey[12],
+                                      fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(width: size.width*0.3),
+                              ]
+                            ),
+                            onChanged: (String value) {
+                              setState(() { 
+                                _religion = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    hintText: "Religion",
-                    border: InputBorder.none,
                   ),
-                  onSaved: (value) => _religion = value,
                 ),
-                  // child: stateDropdown(context), 
-                ),
+                
+                // TextFieldContainer(
+                //   child:TextFormField(
+                //   validator: (value){
+                //     if(value.isEmpty){
+                //       return "Please enter some value";
+                //     }
+                //     return null;
+                //   },
+                //   cursorColor: kPrimaryColor,
+                  
+                //   decoration: InputDecoration(
+                //     icon: Icon(
+                //       Icons.group_rounded,
+                //       color: kPrimaryColor,
+                //     ),
+                //     hintText: "Religion",
+                //     border: InputBorder.none,
+                //   ),
+                //   onSaved: (value) => _religion = value,
+                // ),
+                //   // child: stateDropdown(context), 
+                // ),
                 
                 TextFieldContainer(
                   child: Container(
@@ -797,7 +848,7 @@ class _ProfileCreationState extends State<ProfileCreation> {
       );
     }
       catch(e){
-        print("Error: " + e);
+        print("Error: " + e.toString());
     }
   }
 

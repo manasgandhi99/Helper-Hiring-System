@@ -122,19 +122,19 @@ class _HelperProfileState extends State<HelperProfile> {
   //   await autofill();
   // }
 
-  @override
-  void dispose() {
-    _namecontroller.dispose();
-    _contactnocontroller.dispose();
-    _addresscontroller.dispose();
-    _citycontroller.dispose();
-    _statecontroller.dispose();
-    _agecontroller.dispose();
-    _religioncontroller.dispose();
-    _expectedsalarycontroller.dispose();
-    _languagescontroller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _namecontroller.dispose();
+  //   _contactnocontroller.dispose();
+  //   _addresscontroller.dispose();
+  //   _citycontroller.dispose();
+  //   _statecontroller.dispose();
+  //   _agecontroller.dispose();
+  //   _religioncontroller.dispose();
+  //   _expectedsalarycontroller.dispose();
+  //   _languagescontroller.dispose();
+  //   super.dispose();
+  // }
 
   void _signOut(BuildContext context) async {
     try {
