@@ -239,27 +239,65 @@ class _InDetailState extends State<InDetail> with SingleTickerProviderStateMixin
                       print("Tab Number: ");
                       print(_tabController.index.toString());
                       sethistorydata();
-                      await getemployerdata();
-                      await getemployername();
                       AwesomeDialog(
                         context: context,
                         animType: AnimType.LEFTSLIDE,
                         headerAnimationLoop: false,
-                        dialogType: DialogType.SUCCES,
-                        title: '+91 ' + widget.helper_data_new[12],
+                        dialogType: DialogType.WARNING,
+                        title: 'WARNING!',
                         desc:
-                             'Would you like to call now ?',
-                        btnOkOnPress: () {
-                          _makingPhoneCall();
+                             'Do you want '+widget.helper_data_new[1]+' to know about you?',
+                        btnOkOnPress: () async{
+                          await getemployerdata();
+                          await getemployername();
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.LEFTSLIDE,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.SUCCES,
+                            title: '+91 ' + widget.helper_data_new[12],
+                            desc:
+                                'Would you like to call now ?',
+                            btnOkOnPress: () {
+                              _makingPhoneCall();
+                            },
+                            
+                            btnCancelOnPress: () {},
+                            btnOkIcon: Icons.check_circle,
+                            btnCancelIcon: Icons.cancel,
+                            onDissmissCallback: () {
+                              debugPrint('Dialog Dismiss from callback');
+                            })
+                          ..show();
                         },
                         
                         btnCancelOnPress: () {},
                         btnOkIcon: Icons.check_circle,
                         btnCancelIcon: Icons.cancel,
                         onDissmissCallback: () {
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.LEFTSLIDE,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.SUCCES,
+                            title: '+91 ' + widget.helper_data_new[12],
+                            desc:
+                                'Would you like to call now ?',
+                            btnOkOnPress: () {
+                              _makingPhoneCall();
+                            },
+                            
+                            btnCancelOnPress: () {},
+                            btnOkIcon: Icons.check_circle,
+                            btnCancelIcon: Icons.cancel,
+                            onDissmissCallback: () {
+                              debugPrint('Dialog Dismiss from callback');
+                            })
+                          ..show();
                           debugPrint('Dialog Dismiss from callback');
                         })
                       ..show();
+                      
                     },
                     child: Text(
                       "Get Contact Number",

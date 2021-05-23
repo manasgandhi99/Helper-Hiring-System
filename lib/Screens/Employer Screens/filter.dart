@@ -410,7 +410,7 @@ class _FilterState extends State<Filter> {
                
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,6),
                     width: size.width * 0.93,
                     height: size.height * 0.112,
                     decoration: BoxDecoration(
@@ -463,7 +463,7 @@ class _FilterState extends State<Filter> {
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,6),
                     width: size.width * 0.93,
                     height: size.height * 0.112,
                     decoration: BoxDecoration(
@@ -515,7 +515,7 @@ class _FilterState extends State<Filter> {
                   
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.fromLTRB(20,10,20,10),
+                    padding: EdgeInsets.fromLTRB(20,10,20,6),
                     width: size.width * 0.93,
                     height: size.height * 0.112,
                     decoration: BoxDecoration(

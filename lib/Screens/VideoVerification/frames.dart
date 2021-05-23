@@ -87,7 +87,7 @@ class _FramerState extends State<Framer> {
   void getResponse(List<String> imageList) async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = "https://e1ae77a65e92.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
+    var url = "https://590591f2acdf.ngrok.io/home?doc="+widget.file+"&frame1="+imageList[0]+"&frame2="+imageList[1]+"&frame3="+imageList[2];
     print("Final url: " + url);
         // Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
         // https://2eab1c6ed332.ngrok.io/home?doc=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2FFurrr.jpg?alt=media&token=1f8c10b3-6b71-4c99-939b-7fa290509fda&frame1=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai1.png?alt=media&token=97a170f5-93df-4367-9492-ab857dee1c47&frame2=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai2.png?alt=media&token=eb6281b6-e523-4c14-9f18-cfd759ff8e7e&frame3=https://firebasestorage.googleapis.com/v0/b/e-kyc-34a84.appspot.com/o/100560013326805107879%2Fsam-bhai3.png?alt=media&token=a2363af5-9d30-45f5-b93a-b16d54b4894e
