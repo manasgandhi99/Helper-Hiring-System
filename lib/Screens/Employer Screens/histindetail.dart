@@ -1,6 +1,9 @@
 import 'package:Helper_Hiring_System/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Helper_Hiring_System/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 import 'package:url_launcher/url_launcher.dart'; 
 
 class HistInDetail extends StatefulWidget {
@@ -18,16 +21,24 @@ class _HistInDetailState extends State<HistInDetail> with SingleTickerProviderSt
   String category = "";
   String _city = "";
   String _state = "";
+  int sum = 0;
+  int len = 0;
 
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
     super.initState();
+    getdata();
+  }
+
+  Future<void> getdata() async {
+    print("Get data k andar aaya ");
+    await getinfo();
   }
 
   @override
   Widget build(BuildContext context) {
-
+    print("Build mai aa gaya with sum = "+sum.toString()+" and len = "+len.toString());
     _makingPhoneCall() async {
     String url = 'tel:'+ widget.helper_data_new[12]; 
     if (await canLaunch(url)) { 
@@ -121,6 +132,39 @@ class _HistInDetailState extends State<HistInDetail> with SingleTickerProviderSt
                                   color: kPrimaryColor,
                                 ),
                               ),
+
+                              Row(
+                                children: [
+                                  len==0?Text(
+                                    "0",
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ) :
+                                  Text(
+                                    (sum/len).toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(Icons.star, color: Colors.amber[700]),
+                                  Text(
+                                    " ("+(len).toString() + " reviews)",
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro',
+                                      fontSize: 16,
+                                      letterSpacing: 1.25,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           )
                         ],
@@ -154,11 +198,12 @@ class _HistInDetailState extends State<HistInDetail> with SingleTickerProviderSt
                 child: TabBarView(
                   children: [
                     profileDetail(size),
-                    Container(
-                      child: Center(
-                          child:Text("Feedback"),
-                      ),
-                    )
+                    feedbackDetail(size),
+                    // Container(
+                    //   child: Center(
+                    //       child:Text("Feedback"),
+                    //   ),
+                    // )
                   ],
                   controller: _tabController,
                 ),
@@ -354,6 +399,122 @@ class _HistInDetailState extends State<HistInDetail> with SingleTickerProviderSt
             )
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> getinfo() async {
+    print("inside get info");
+    await FirebaseFirestore.instance
+    .collection('helper')
+    .doc(widget.helper_data_new[15])
+    .collection('feedback')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+      len = querySnapshot.docs.length;
+      print("Lenght mila: "+len.toString());
+        querySnapshot.docs.forEach((doc) {
+            sum = sum + doc["rating"];
+            print("Sum ki value: "+sum.toString());
+        });
+        setState(() {
+          sum=sum;
+          len=len;
+        });
+    });
+  }
+
+  void _showRatingAppDialog() {
+  final _ratingDialog = RatingDialog(
+    accentColor: Colors.amber,
+    title: 'Rate '+widget.helper_data_new[1],
+    description: 'Rate '+widget.helper_data_new[1]+" and let others know how satisfied were you with his/her service.",
+    icon: Image.asset("assets/images/helperApplogo.png",
+      height: 100,),
+    submitButton: 'Submit',
+    onSubmitPressed: (response) async {
+      print('rating: ${response}');
+      final user = await widget.auth.currentUser();
+      FirebaseFirestore.instance
+      .collection('helper')
+      .doc(widget.helper_data_new[15])
+      .collection('feedback')
+      .doc(user)
+      .set({
+        'rating':response
+      });
+      print("rating set");
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> HistInDetail(auth: widget.auth, helper_data_new: widget.helper_data_new)));
+      // if (response.rating < 3.0) {
+      //   print('response.rating: ${response.rating}');
+      // } else {
+      //   Container();
+      // }
+    },
+  );
+
+  showDialog(
+    context: context,
+    barrierDismissible: true, 
+    builder: (context) => _ratingDialog,
+  );
+}
+
+  Widget feedbackDetail(Size size) {
+
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+          padding: EdgeInsets.fromLTRB(size.width * 0.05 ,size.height*0, size.width * 0.05, size.height*0),
+          child: Image.asset(
+                "assets/images/feedback.png",
+                height: size.height * 0.3,
+          ),
+        ),
+
+        SizedBox(height: size.height * 0.008),
+
+        Text(
+          "Kindly Submit your Feedback.",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+                fontSize: 19.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black
+                  ),
+        ),
+
+        SizedBox(height: size.height * 0.035),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          width: size.width * 0.45,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              color: Colors.amber[700],
+              onPressed: () {
+                _showRatingAppDialog();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.feedback, color: Colors.white,),
+                  SizedBox(width: size.width*0.03),
+                  Text(
+                    "Give Feedback",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        
+      ],
       ),
     );
   }
